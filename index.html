@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PalmQual-AI — Palm Oil Quality Assessment & Downstream Allocation System</title>
+  <meta name="description" content="Sistem analitik berbasis mutu biokimia untuk klasifikasi panen kelapa sawit, monitoring hold time, dan penentuan alokasi optimal (CPO Pangan, Biofuel HVO/FAME, Oleokimia, Pakan & Pupuk).">
+  
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Visualizations -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <!-- Application Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/flowchart.css">
+</head>
+<body>
+  <div class="app-wrapper">
+    <!-- Navigation Bar -->
+    <header class="navbar">
+      <div class="nav-brand" onclick="document.querySelector('.nav-tab-btn[data-tab=\'dashboard\']').click()">
+        <img src="assets/logo.jpg" alt="PalmQual-AI Logo" class="brand-logo-img">
+        <div class="brand-text">
+          <span class="brand-title">PalmQual-AI</span>
+          <span class="brand-tagline">Quality Assessment &amp; Downstream Allocation System</span>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="nav-tabs" aria-label="Navigasi Modul">
+        <button class="nav-tab-btn active" data-tab="dashboard">
+          Dashboard Analitik
+        </button>
+        <button class="nav-tab-btn" data-tab="simulator">
+          Simulator Pengujian Lab
+        </button>
+        <button class="nav-tab-btn" data-tab="batches">
+          Manajemen Lot (<span id="batchCountBadge">8 Lot</span>)
+        </button>
+        <button class="nav-tab-btn" data-tab="settings">
+          Kriteria Mutu &amp; Setup
+        </button>
+      </nav>
+
+      <!-- System Status indicator -->
+      <div class="nav-actions">
+        <div class="system-status-badge">
+          <span class="status-dot-pulse"></span>
+          <span>Engine Aktif</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Workspace Content -->
+    <main class="main-content">
+      
+      <!-- ==========================================
+           TAB 1: DASHBOARD & ANALYTICS
+           ========================================== -->
+      <section id="panel-dashboard" class="tab-panel active">
+        <!-- KPI Cards Grid -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <span class="kpi-label">Total Batch Terdaftar</span>
+              <span class="kpi-tag">Inventaris</span>
+            </div>
+            <div class="kpi-value-row">
+              <span id="kpiTotalBatches" class="kpi-value mono">8</span>
+              <span class="kpi-unit">Lot Panen</span>
+            </div>
+            <div class="kpi-subtext">
+              <span>Total Volume: <strong id="kpiTotalTonnage" class="mono">335.0</strong> Ton</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <span class="kpi-label">Rata-rata Kadar FFA</span>
+              <span class="kpi-tag">Laboratorium</span>
+            </div>
+            <div class="kpi-value-row">
+              <span id="kpiAvgFfa" class="kpi-value mono">8.05</span>
+              <span class="kpi-unit">% FFA</span>
+            </div>
+            <div class="kpi-subtext">
+              <span>Batas CPO konsumsi: &le; 3.50% FFA</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <span class="kpi-label">Rata-rata Usia Simpan (Hold Time)</span>
+              <span class="kpi-tag">Loading Ramp</span>
+            </div>
+            <div class="kpi-value-row">
+              <span id="kpiAvgHoldTime" class="kpi-value mono">43.6</span>
+              <span class="kpi-unit">Jam</span>
+            </div>
+            <div class="kpi-subtext">
+              <span>Ambang aktivasi enzimatis lipase: 24 Jam</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <span class="kpi-label">Distribusi Alokasi Disposisi</span>
+              <span class="kpi-tag">Hilirisasi</span>
+            </div>
+            <div class="kpi-dist-row">
+              <div class="kpi-dist-item">
+                <span>Pangan CPO:</span>
+                <strong id="kpiDefaultCount" class="mono">2 Lot (25%)</strong>
+              </div>
+              <div class="kpi-dist-item">
+                <span>Bio/Eco-Products:</span>
+                <strong id="kpiBioCount" class="mono">3 Lot (38%)</strong>
+              </div>
+              <div class="kpi-dist-item">
+                <span>Produk Lain:</span>
+                <strong id="kpiOtherCount" class="mono">3 Lot (38%)</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Analytical Charts Row -->
+        <div class="grid-2col">
+          <div class="glass-card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Proporsi Alokasi Hasil Panen</h3>
+                <div class="card-subtitle">Perbandingan volume CPO Pangan, Bio-Products, dan Jalur Sirkular</div>
+              </div>
+            </div>
+            <div style="height: 280px; position: relative;">
+              <canvas id="allocationChart"></canvas>
+            </div>
+          </div>
+
+          <div class="glass-card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Korelasi Hold Time vs Kadar FFA (%)</h3>
+                <div class="card-subtitle">Laju pembentukan asam lemak bebas per lot penampungan</div>
+              </div>
+            </div>
+            <div style="height: 280px; position: relative;">
+              <canvas id="ffaHoldChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contextual Action Section -->
+        <div class="glass-card" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <h3 style="font-size: 1.05rem; color: var(--text-primary);">Pengujian Sampel Masuk Baru</h3>
+            <p style="font-size: 0.84rem; color: var(--text-secondary); margin-top: 0.2rem;">
+              Masukkan parameter analitis laboratorium untuk meninjau klasifikasi mutu dan alur keputusan hilirisasi.
+            </p>
+          </div>
+          <button class="btn btn-primary" onclick="document.querySelector('.nav-tab-btn[data-tab=\'simulator\']').click()">
+            Buka Simulator Uji Lab
+          </button>
+        </div>
+      </section>
+
+
+      <!-- ==========================================
+           TAB 2: LAB TESTING & SIMULATOR
+           ========================================== -->
+      <section id="panel-simulator" class="tab-panel">
+        
+        <!-- Presets Bar for Instant Realistic Simulation -->
+        <div class="presets-bar">
+          <div class="presets-label">
+            <span>Sampel Standar Industri:</span>
+          </div>
+          <button class="btn-preset active" data-preset="preset-fresh">
+            Fresh CPO Super (Hold 8h, FFA 1.6%)
+          </button>
+          <button class="btn-preset" data-preset="preset-hvo">
+            Biofuel HVO Green Diesel (Hold 22h, FFA 3.2%)
+          </button>
+          <button class="btn-preset" data-preset="preset-fame">
+            Biodiesel FAME B35 (Hold 36h, FFA 4.8%)
+          </button>
+          <button class="btn-preset" data-preset="preset-bioplastic">
+            Bioplastik PHA &amp; Sabun (Hold 44h, FFA 7.2%)
+          </button>
+          <button class="btn-preset" data-preset="preset-oleo">
+            Oleokimia Industri (Hold 54h, FFA 12.0%)
+          </button>
+          <button class="btn-preset" data-preset="preset-feed">
+            Pakan Ternak Kalsium (Hold 68h, FFA 16.5%)
+          </button>
+          <button class="btn-preset" data-preset="preset-compost">
+            Kompos &amp; Biogas (Hold 88h, FFA 22.5%)
+          </button>
+          <button class="btn-preset" data-preset="random">
+            Simulasi Parameter Acak
+          </button>
+        </div>
+
+        <!-- Lab Simulator Two-Column Layout -->
+        <div class="grid-lab-layout">
+          
+          <!-- Column A: Input Form Module -->
+          <div class="glass-card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Parameter Fisik &amp; Kimia Sampel</h3>
+                <div class="card-subtitle">Data laboratorium kontrol kualitas lot panen</div>
+              </div>
+            </div>
+
+            <!-- Metadata Group -->
+            <div class="form-section-title">
+              <span>Identifikasi &amp; Waktu Panen</span>
+            </div>
+            
+            <div class="grid-2col" style="gap: 0.75rem; margin-bottom: 0.5rem;">
+              <div class="form-group" style="margin-bottom: 0.5rem;">
+                <label class="form-label" for="inputBatchId">Batch ID</label>
+                <input type="text" id="inputBatchId" class="form-input mono" value="BATCH-2026-X99">
+              </div>
+              <div class="form-group" style="margin-bottom: 0.5rem;">
+                <label class="form-label" for="inputEstateName">Lokasi Kebun / Blok</label>
+                <input type="text" id="inputEstateName" class="form-input" value="Kebun Riau Afdeling 3 - Blok A-12">
+              </div>
+            </div>
+
+            <div class="grid-2col" style="gap: 0.75rem; margin-bottom: 0.75rem;">
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label" for="inputHarvestDate">Waktu Panen</label>
+                <input type="datetime-local" id="inputHarvestDate" class="form-input" value="2026-10-29T06:00">
+              </div>
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label" for="inputTestDate">Waktu Uji Lab</label>
+                <input type="datetime-local" id="inputTestDate" class="form-input" value="2026-10-29T14:00">
+              </div>
+            </div>
+
+            <!-- Physical & Chemical Parameters -->
+            <div class="form-section-title">
+              <span>Hasil Uji Laboratorium</span>
+            </div>
+
+            <!-- Hold Time Slider -->
+            <div class="form-group">
+              <div class="form-label-row">
+                <label class="form-label" for="inputHoldTime">
+                  <span>Hold Time (Lama Penundaan)</span>
+                </label>
+                <span id="badgeHoldTime" class="form-badge-val">8.0 Jam</span>
+              </div>
+              <div class="range-slider-wrapper">
+                <input type="range" id="inputHoldTime" class="range-slider" min="1" max="100" step="0.5" value="8.0">
+              </div>
+              <div class="range-ticks">
+                <span>0h (Segar)</span>
+                <span style="color: var(--accent-palm);">24h (Batas Pangan)</span>
+                <span style="color: var(--accent-other);">48h (Diverted)</span>
+                <span>100h+</span>
+              </div>
+            </div>
+
+            <!-- FFA % Slider -->
+            <div class="form-group">
+              <div class="form-label-row">
+                <label class="form-label" for="inputFfa">
+                  <span>Kadar Asam Lemak Bebas (FFA)</span>
+                </label>
+                <span id="badgeFfa" class="form-badge-val">1.60 %</span>
+              </div>
+              <div class="range-slider-wrapper">
+                <input type="range" id="inputFfa" class="range-slider" min="0.5" max="25" step="0.05" value="1.60">
+              </div>
+              <div class="range-ticks">
+                <span style="color: var(--accent-bio);">&le; 2.5% (Super)</span>
+                <span style="color: var(--accent-palm);">&le; 3.5% (SNI)</span>
+                <span style="color: var(--accent-ai);">&le; 7% (Biofuel)</span>
+                <span style="color: var(--accent-danger);">&gt; 15% (Oleo/Pupuk)</span>
+              </div>
+            </div>
+
+            <!-- pH Slider -->
+            <div class="form-group">
+              <div class="form-label-row">
+                <label class="form-label" for="inputPh">
+                  <span>Derajat Keasaman (pH)</span>
+                </label>
+                <span id="badgePh" class="form-badge-val">6.40</span>
+              </div>
+              <div class="range-slider-wrapper">
+                <input type="range" id="inputPh" class="range-slider" min="3.8" max="7.0" step="0.05" value="6.40">
+              </div>
+              <div class="range-ticks">
+                <span style="color: var(--accent-danger);">3.8 (Sangat Asam)</span>
+                <span>5.0</span>
+                <span style="color: var(--accent-bio);">5.8 - 6.5 (Optimal)</span>
+                <span>7.0 (Netral)</span>
+              </div>
+            </div>
+
+            <!-- Moisture % Slider -->
+            <div class="form-group">
+              <div class="form-label-row">
+                <label class="form-label" for="inputMoisture">
+                  <span>Kadar Air (Moisture)</span>
+                </label>
+                <span id="badgeMoisture" class="form-badge-val">0.15 %</span>
+              </div>
+              <div class="range-slider-wrapper">
+                <input type="range" id="inputMoisture" class="range-slider" min="0.05" max="3.0" step="0.05" value="0.15">
+              </div>
+              <div class="range-ticks">
+                <span>0.05%</span>
+                <span style="color: var(--accent-bio);">&le; 0.25% (Pangan)</span>
+                <span>0.8% (Bio)</span>
+                <span style="color: var(--accent-danger);">&gt; 1.5% (Degradasi)</span>
+              </div>
+            </div>
+
+            <!-- Viscosity Slider -->
+            <div class="form-group">
+              <div class="form-label-row">
+                <label class="form-label" for="inputViscosity">
+                  <span>Viskositas Dinamis (cSt @ 40°C)</span>
+                </label>
+                <span id="badgeViscosity" class="form-badge-val">44 cSt</span>
+              </div>
+              <div class="range-slider-wrapper">
+                <input type="range" id="inputViscosity" class="range-slider" min="30" max="140" step="1" value="44">
+              </div>
+              <div class="range-ticks">
+                <span>30 cSt (Encer)</span>
+                <span>50 cSt (Standar)</span>
+                <span style="color: var(--accent-ai);">&gt; 70 cSt (Bioplastik)</span>
+                <span>140 cSt (Pekat)</span>
+              </div>
+            </div>
+
+            <!-- Color Swatches -->
+            <div class="form-group">
+              <label class="form-label" style="margin-bottom: 0.5rem;">
+                <span>Karakteristik Warna Ekstrak</span>
+              </label>
+              <div class="color-swatch-grid">
+                <div class="swatch-card active" data-color="sangat-merah">
+                  <div class="swatch-circle" style="background: #a82005;"></div>
+                  <div class="swatch-info">
+                    <span class="swatch-title">Merah Jingga</span>
+                    <span class="swatch-desc">Karotenoid tinggi, segar</span>
+                  </div>
+                </div>
+                <div class="swatch-card" data-color="kuning-emas">
+                  <div class="swatch-circle" style="background: #eab308;"></div>
+                  <div class="swatch-info">
+                    <span class="swatch-title">Kuning Emas</span>
+                    <span class="swatch-desc">CPO jernih stabil</span>
+                  </div>
+                </div>
+                <div class="swatch-card" data-color="gelap-pucat">
+                  <div class="swatch-circle" style="background: #574439;"></div>
+                  <div class="swatch-info">
+                    <span class="swatch-title">Cokelat Gelap</span>
+                    <span class="swatch-desc">Penuaan pigmen buah</span>
+                  </div>
+                </div>
+                <div class="swatch-card" data-color="gelap-teroksidasi">
+                  <div class="swatch-circle" style="background: #2b1810;"></div>
+                  <div class="swatch-info">
+                    <span class="swatch-title">Gelap Pekat</span>
+                    <span class="swatch-desc">Oksidasi peroksida lanjut</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Batch Weight & Storage Temp -->
+            <div class="grid-2col" style="gap: 0.75rem; margin-top: 1rem;">
+              <div class="form-group" style="margin-bottom: 0;">
+                <div class="form-label-row">
+                  <label class="form-label" for="inputAmbientTemp">Suhu Simpan</label>
+                  <span id="badgeAmbientTemp" class="form-badge-val">28 °C</span>
+                </div>
+                <input type="range" id="inputAmbientTemp" class="range-slider" min="20" max="45" step="1" value="28">
+              </div>
+              <div class="form-group" style="margin-bottom: 0;">
+                <div class="form-label-row">
+                  <label class="form-label" for="inputBatchWeight">Tonase Lot</label>
+                  <span id="badgeBatchWeight" class="form-badge-val">35.0 Ton</span>
+                </div>
+                <input type="range" id="inputBatchWeight" class="range-slider" min="5" max="100" step="0.5" value="35.0">
+              </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div style="margin-top: 1.5rem; display: flex; gap: 0.75rem;">
+              <button id="btnSaveBatch" class="btn btn-primary" style="flex: 1;">
+                Daftarkan Sebagai Batch Baru
+              </button>
+            </div>
+          </div>
+
+
+          <!-- Column B: Interactive Flowchart & Decision Output Card -->
+          <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            
+            <!-- Recommendation Output Card -->
+            <div id="aiResultHero" class="ai-result-hero track-default">
+              <div class="ai-hero-top">
+                <div>
+                  <div id="aiTrackTag" class="ai-track-tag tag-default">
+                    Default Track (CPO Pangan)
+                  </div>
+                  <h2 id="aiPrimaryTitle" class="ai-primary-title">
+                    Minyak Sawit Konsumsi Super (Cooking Oil Grade A)
+                  </h2>
+                  <div id="aiSubCategory" style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500; margin-top: 0.2rem;">
+                    Premium Olein / Standar Mutu SNI 7709
+                  </div>
+                  <div id="aiAlternativeRec" class="ai-secondary-rec">
+                    Rute Alternatif: Biofuel HVO Premium (Green Diesel)
+                  </div>
+                </div>
+
+                <div class="confidence-box">
+                  <div id="aiConfidenceVal" class="confidence-val">97%</div>
+                  <span class="confidence-label">Indeks Keyakinan</span>
+                </div>
+              </div>
+
+              <!-- Violations Banner (If diverted to flex) -->
+              <div id="aiViolationsBox" style="display: none; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); padding: 0.75rem 1rem; border-radius: var(--radius-sm); font-size: 0.8rem; color: #fca5a5; margin-bottom: 0.85rem;"></div>
+
+              <!-- Impact & Economic Valuation Badges -->
+              <div class="impact-pills-row">
+                <div class="impact-pill">
+                  <div class="impact-pill-data">
+                    <span class="impact-pill-lbl">Estimasi Valuasi Batch</span>
+                    <span id="valFinancial" class="impact-pill-val mono">Rp 518.000.000</span>
+                  </div>
+                </div>
+                <div class="impact-pill">
+                  <div class="impact-pill-data">
+                    <span class="impact-pill-lbl">Potensi Pengurangan Emisi</span>
+                    <span id="valCarbon" class="impact-pill-val mono">-21.700 kg CO2</span>
+                  </div>
+                </div>
+                <div class="impact-pill">
+                  <div class="impact-pill-data">
+                    <span class="impact-pill-lbl">Standar Acuan Regulasi</span>
+                    <span id="valRouteStatus" class="impact-pill-val">Standar SNI 7709 / PORAM</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Scientific Rationale Explanation -->
+              <div class="scientific-box">
+                <div class="scientific-title">
+                  <span>Dasar Analisis Biokimia</span>
+                </div>
+                <p id="aiScientificReason">
+                  Batch diproses dalam kurun waktu optimum (&le; 24 jam) sebelum enzim endogen lipase pada mesocarp buah teraktivasi secara masif. Nilai FFA (1.6%) dan pH (6.4) menunjukkan integritas trigliserida sangat utuh, dengan laju peroksida sangat rendah.
+                </p>
+              </div>
+
+              <!-- Downstream Technical SOP Steps -->
+              <div class="sop-section">
+                <div class="sop-title">
+                  <span>Prosedur Operasi Standar Penyaluran Pabrik</span>
+                </div>
+                <ol id="aiSopList" class="sop-steps-list">
+                  <!-- Dynamically injected -->
+                </ol>
+              </div>
+            </div>
+
+            <!-- Interactive Decision Pipeline Flowchart -->
+            <div class="flowchart-container" id="flowchartContainer">
+              <div class="flowchart-header">
+                <div class="flowchart-title">
+                  <span>Alur Keputusan Klasifikasi &amp; Disposisi</span>
+                </div>
+                <div class="flowchart-legend">
+                  <div class="legend-item">
+                    <span class="legend-dot dot-default"></span>
+                    <span>Default Track (CPO)</span>
+                  </div>
+                  <div class="legend-item">
+                    <span class="legend-dot dot-bio"></span>
+                    <span>Bio/Eco-Products (Yes)</span>
+                  </div>
+                  <div class="legend-item">
+                    <span class="legend-dot dot-other"></span>
+                    <span>Produk Lain (No)</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Flowchart Interactive Canvas Board -->
+              <div class="flowchart-canvas">
+                
+                <!-- SVG Connector Paths -->
+                <svg class="flowchart-svg" viewBox="0 0 920 480" preserveAspectRatio="none">
+                  <!-- Path 1: Panen -> Penampungan -->
+                  <path id="path-1" class="flow-path active path-neutral" d="M 140 75 L 140 120" />
+                  
+                  <!-- Path 2: Penampungan -> Entry -->
+                  <path id="path-2" class="flow-path active path-neutral" d="M 140 185 L 140 230" />
+                  
+                  <!-- Path 3: Entry -> Pemilahan -->
+                  <path id="path-3" class="flow-path active path-neutral" d="M 140 295 L 140 340" />
+
+                  <!-- Path Default: Pemilahan -> Produksi Minyak Sawit -->
+                  <path id="path-default" class="flow-path active path-default" d="M 250 375 L 370 375" />
+
+                  <!-- Path Flex: Pemilahan -> Analisis Mendalam -->
+                  <path id="path-flex" class="flow-path" d="M 140 410 L 140 440 L 480 440 L 480 270" />
+
+                  <!-- Path Bio Yes: Analisis Mendalam -> Produk Bio -->
+                  <path id="path-bio-yes" class="flow-path" d="M 590 220 L 640 220 L 640 150 L 690 150" />
+
+                  <!-- Path Diolah: Produk Bio -> Diolah -->
+                  <path id="path-diolah" class="flow-path" d="M 800 185 L 800 230" />
+
+                  <!-- Path Bio No: Analisis Mendalam -> Produk Lain -->
+                  <path id="path-bio-no" class="flow-path" d="M 590 240 L 640 240 L 640 365 L 690 365" />
+                </svg>
+
+                <!-- Badges on Paths -->
+                <div id="badge-default" class="branch-label active branch-default" style="top: 375px; left: 310px;">
+                  Default
+                </div>
+                <div id="badge-flex" class="branch-label" style="top: 440px; left: 310px;">
+                  Flex
+                </div>
+                <div id="badge-bio-yes" class="branch-label" style="top: 150px; left: 650px;">
+                  Yes
+                </div>
+                <div id="badge-bio-no" class="branch-label" style="top: 365px; left: 650px;">
+                  No
+                </div>
+
+                <!-- Node 1: Panen Sawit -->
+                <div id="node-panen" class="flow-node active node-ai" data-node-id="node-panen" style="top: 10px; left: 30px;">
+                  <div class="node-header">
+                    <div class="node-title">Panen Sawit</div>
+                  </div>
+                  <div class="node-desc">Pemanenan Tandan Buah Segar (TBS) di kebun.</div>
+                  <div class="node-status-pill pill-pass">Panen Siap</div>
+                </div>
+
+                <!-- Node 2: Penampungan Berdasarkan Jadwal Panen -->
+                <div id="node-penampungan" class="flow-node active node-ai" data-node-id="node-penampungan" style="top: 120px; left: 30px;">
+                  <div class="node-header">
+                    <div class="node-title">Penampungan Jadwal</div>
+                  </div>
+                  <div class="node-desc">Loading Ramp PKS &amp; evaluasi Hold Time.</div>
+                  <div class="node-status-pill pill-pass">Hold: 8.0 Jam</div>
+                </div>
+
+                <!-- Node 3: Bahan Pokok Sawit (Batch Data Entry) -->
+                <div id="node-entry" class="flow-node active node-ai" data-node-id="node-entry" style="top: 230px; left: 30px;">
+                  <div class="node-header">
+                    <div class="node-title">Pengujian Sampel Bahan</div>
+                  </div>
+                  <div class="node-desc">Pemeriksaan lab: FFA, pH, Air, Viskositas.</div>
+                  <div class="node-status-pill pill-pass">FFA: 1.6% | pH: 6.4</div>
+                </div>
+
+                <!-- Node 4: Pemilahan Kualitas -->
+                <div id="node-ai-pemilahan" class="flow-node active node-ai" data-node-id="node-ai-pemilahan" style="top: 340px; left: 30px;">
+                  <div class="node-header">
+                    <div class="node-title">Evaluasi Kriteria Mutu</div>
+                  </div>
+                  <div class="node-desc">Verifikasi ambang batas mutu CPO pangan.</div>
+                  <div class="node-status-pill pill-pass">Lolos Standar CPO</div>
+                </div>
+
+                <!-- Node 5: Produksi Minyak Sawit (Default Track) -->
+                <div id="node-default-prod" class="flow-node active node-default" data-node-id="node-default-prod" style="top: 340px; left: 370px;">
+                  <div class="node-header">
+                    <div class="node-title">Produksi Minyak Sawit</div>
+                  </div>
+                  <div class="node-desc">CPO Standar / Cooking Oil SNI 7709 Ekspor.</div>
+                  <div class="node-status-pill pill-pass">Cooking Oil Grade A</div>
+                </div>
+
+                <!-- Node 6: Analisis Mendalam (Flex Track) -->
+                <div id="node-ai-flex" class="flow-node dimmed" data-node-id="node-ai-flex" style="top: 200px; left: 370px;">
+                  <div class="node-header">
+                    <div class="node-title">Evaluasi Turunan Flex</div>
+                  </div>
+                  <div class="node-desc">Penentuan kecocokan Bio-Product vs Lain.</div>
+                  <div class="node-status-pill">Siaga</div>
+                </div>
+
+                <!-- Node 7: Produk Bio / Eco-Friendly -->
+                <div id="node-bio-prod" class="flow-node dimmed" data-node-id="node-bio-prod" style="top: 110px; left: 690px;">
+                  <div class="node-header">
+                    <div class="node-title">Produk Bio / Eco-Friendly</div>
+                  </div>
+                  <div class="node-desc">HVO Green Diesel, FAME B35, Bioplastik.</div>
+                  <div class="node-status-pill">Standar Eco Lolos</div>
+                </div>
+
+                <!-- Node 8: Diolah (Refinery Eco-Refining) -->
+                <div id="node-diolah" class="flow-node dimmed" data-node-id="node-diolah" style="top: 230px; left: 690px;">
+                  <div class="node-header">
+                    <div class="node-title">Unit Pemrosesan Khusus</div>
+                  </div>
+                  <div class="node-desc">Hydrotreating, Transesterifikasi, Polimerisasi.</div>
+                  <div class="node-status-pill">Siap Pengolahan</div>
+                </div>
+
+                <!-- Node 9: Produk Lain (Pakan/Pupuk/Oleokimia) -->
+                <div id="node-other-prod" class="flow-node dimmed" data-node-id="node-other-prod" style="top: 340px; left: 690px;">
+                  <div class="node-header">
+                    <div class="node-title">Oleokimia &amp; Pemanfaatan Sirkular</div>
+                  </div>
+                  <div class="node-desc">Oleokimia Industri, Pakan Ternak, Pupuk Organik.</div>
+                  <div class="node-status-pill">Sirkular Industri</div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ==========================================
+           TAB 3: MANAJEMEN BATCH & DISPOSISI
+           ========================================== -->
+      <section id="panel-batches" class="tab-panel">
+        <div class="glass-card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">Daftar Lot Panen Masuk</h3>
+              <div class="card-subtitle">Pemantauan disposisi alokasi bahan baku pabrik kelapa sawit</div>
+            </div>
+            
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button id="btnExportCsv" class="btn btn-secondary btn-sm">
+                Ekspor CSV
+              </button>
+              <button id="btnExportJson" class="btn btn-secondary btn-sm">
+                Ekspor JSON
+              </button>
+              <button id="btnResetBatches" class="btn btn-secondary btn-sm" style="color: var(--text-muted);">
+                Reset Data Lot
+              </button>
+            </div>
+          </div>
+
+          <!-- Filter & Search Toolbar -->
+          <div style="display: flex; gap: 1rem; margin-bottom: 1.25rem; flex-wrap: wrap; align-items: center;">
+            <div style="flex: 1; min-width: 250px;">
+              <input type="text" id="searchBatchInput" class="form-input" placeholder="Cari ID Lot, Lokasi Kebun, atau Jalur Alokasi...">
+            </div>
+            <div style="width: 240px;">
+              <select id="filterBatchTrack" class="form-select">
+                <option value="ALL">Semua Jalur Alokasi</option>
+                <option value="DEFAULT">Default Track (Minyak Standar)</option>
+                <option value="BIO">Flex Track (Bio / Eco-Friendly)</option>
+                <option value="OTHER">Flex Track (Produk Lain)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Data Table -->
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Batch ID</th>
+                  <th>Kebun / Asal TBS</th>
+                  <th>Hold Time</th>
+                  <th>Tonase</th>
+                  <th>Hasil Uji Lab</th>
+                  <th>Keputusan Alokasi</th>
+                  <th>Kategori</th>
+                  <th>Tindakan</th>
+                </tr>
+              </thead>
+              <tbody id="batchTableBody">
+                <!-- Dynamically rendered via app.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ==========================================
+           TAB 4: KRITERIA MUTU & PENGATURAN
+           ========================================== -->
+      <section id="panel-settings" class="tab-panel">
+        <div class="grid-2col">
+          
+          <!-- Standard Operating Thresholds Reference -->
+          <div class="glass-card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Matriks Ambang Batas Ilmiah &amp; Regulasi</h3>
+                <div class="card-subtitle">Standar acuan SNI 7709, PORAM, dan Mandat Bioenergi Nasional</div>
+              </div>
+            </div>
+
+            <div style="font-size: 0.84rem; color: var(--text-secondary); line-height: 1.6;">
+              <p style="margin-bottom: 1rem;">
+                PalmQual-AI mengadopsi standar multi-parameter biokimia untuk mengoptimalkan margin ekonomi dan menekan jejak karbon pabrik:
+              </p>
+
+              <div style="background: var(--bg-surface-subtle); border-radius: var(--radius-sm); padding: 1rem; margin-bottom: 1rem; border-left: 3px solid var(--accent-palm);">
+                <strong style="color: var(--accent-palm);">1. Default Track (CPO Pangan / Cooking Oil SNI 7709):</strong>
+                <ul style="margin-left: 1.25rem; margin-top: 0.35rem;">
+                  <li><strong>Hold Time:</strong> &le; 24 jam (menghindari aktivasi masif lipase TBS).</li>
+                  <li><strong>FFA:</strong> &le; 3.50% (standar ekspor PORAM / mutu pangan).</li>
+                  <li><strong>pH:</strong> 5.8 &ndash; 6.8 (kestabilan hidrolisis netral).</li>
+                  <li><strong>Kadar Air:</strong> &le; 0.25% (mencegah degradasi auto-katalitik).</li>
+                </ul>
+              </div>
+
+              <div style="background: var(--bg-surface-subtle); border-radius: var(--radius-sm); padding: 1rem; margin-bottom: 1rem; border-left: 3px solid var(--accent-bio);">
+                <strong style="color: var(--accent-bio);">2. Flex Track &mdash; Bio / Eco-Friendly Products:</strong>
+                <ul style="margin-left: 1.25rem; margin-top: 0.35rem;">
+                  <li><strong>Biofuel HVO (Green Diesel):</strong> FFA &le; 4.2%, pH &ge; 5.6, Moisture &le; 0.35%. Katalis hydrotreating bebas racun logam.</li>
+                  <li><strong>Biodiesel FAME (Mandat B35/B40):</strong> FFA 3.5% &ndash; 7.0%, viskositas 45&ndash;65 cSt. Reaksi transesterifikasi alkali / asam.</li>
+                  <li><strong>Bioplastik PHA:</strong> Viskositas tinggi (&ge; 65 cSt), fraksi asam lemak teroksidasi untuk fermentasi bakteri <em>Cupriavidus necator</em>.</li>
+                  <li><strong>Sabun Organik:</strong> FFA 4.5% &ndash; 9.5%, saponifikasi alkali alami.</li>
+                </ul>
+              </div>
+
+              <div style="background: var(--bg-surface-subtle); border-radius: var(--radius-sm); padding: 1rem; border-left: 3px solid var(--accent-other);">
+                <strong style="color: var(--accent-other);">3. Flex Track &mdash; Produk Lain (Non-Biofuel):</strong>
+                <ul style="margin-left: 1.25rem; margin-top: 0.35rem;">
+                  <li><strong>Oleokimia Industri:</strong> FFA 8% &ndash; 16%, splitting lemak termal.</li>
+                  <li><strong>Pakan Ternak Kalsium (Bypass Fat):</strong> FFA 12% &ndash; 18%, pH 4.4 &ndash; 5.0.</li>
+                  <li><strong>Pupuk Kompos &amp; Biogas:</strong> FFA &gt; 18%, pH asam &lt; 4.4, dekomposisi lanjut diolah menjadi pupuk regeneratif dan biometanasi.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- AI Setup & Optional Gemini API Configuration -->
+          <div class="glass-card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Konfigurasi Model &amp; Gemini API</h3>
+                <div class="card-subtitle">Pengaturan model inferensi analitis &amp; structured reasoning</div>
+              </div>
+            </div>
+
+            <div style="font-size: 0.84rem; color: var(--text-secondary); line-height: 1.6;">
+              <p style="margin-bottom: 1rem;">
+                PalmQual-AI secara otomatis menjalankan <strong>Embedded Scientific Rule Engine</strong> secara instan offline. Anda juga dapat menghubungkan <strong>Google Gemini API</strong> untuk penjelasan naratif mendalam secara generatif.
+              </p>
+
+              <div class="form-group">
+                <label class="form-label" for="inputGeminiApiKey">Google Gemini API Key (Opsional)</label>
+                <input type="password" id="inputGeminiApiKey" class="form-input mono" placeholder="AIzaSy... (Biarkan kosong untuk offline rule-engine)">
+                <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.35rem;">
+                  API Key disimpan secara lokal di browser Anda.
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-top: 1.25rem;">
+                <label class="form-label">Mode Evaluasi Mutu</label>
+                <select class="form-select">
+                  <option value="hybrid">Standar Multi-Kriteria (Biochemical Matrix + Fallback)</option>
+                  <option value="strict">Strict SNI 7709 / ISO 17025 Compliant</option>
+                  <option value="max-bio">Eco-Optimization (Prioritas Transisi Bio-Product)</option>
+                </select>
+              </div>
+
+              <div style="margin-top: 1.5rem;">
+                <button id="btnSaveSettings" class="btn btn-primary" style="width: 100%;">
+                  Simpan Konfigurasi
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Global Footer -->
+    <footer class="footer">
+      <div>
+        <strong>PalmQual-AI</strong> &mdash; Sistem Klasifikasi &amp; Alokasi Mutu Hilirisasi Kelapa Sawit.
+      </div>
+      <div class="footer-links">
+        <a href="#panel-dashboard" class="footer-link" onclick="document.querySelector('.nav-tab-btn[data-tab=\'dashboard\']').click()">Dashboard</a>
+        <a href="#panel-simulator" class="footer-link" onclick="document.querySelector('.nav-tab-btn[data-tab=\'simulator\']').click()">Simulator Uji Lab</a>
+        <a href="#panel-batches" class="footer-link" onclick="document.querySelector('.nav-tab-btn[data-tab=\'batches\']').click()">Data Lot Batch</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ==========================================
+       MODAL: QUALITY CERTIFICATE & DISPATCH PASS
+       ========================================== -->
+  <div id="certModal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 720px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.05rem; color: var(--text-primary);">Quality Certificate &amp; Dispatch Pass</h3>
+        <button id="btnCloseCertModal" class="btn-close-modal">✕</button>
+      </div>
+      <div class="modal-body" id="certPrintArea">
+        <div class="cert-sheet">
+          <div class="cert-header">
+            <div class="cert-title-block">
+              <h2>SURAT KEPUTUSAN ALOKASI BAHAN BAKU</h2>
+              <div style="font-size: 0.8rem; color: #64748b; font-weight: 600;">
+                PT SAWIT MAKMUR LESTARI &mdash; PKS &amp; BIO-REFINERY UNIT
+              </div>
+            </div>
+            <div id="certStamp" class="cert-badge-stamp">
+              FOOD GRADE PASSED
+            </div>
+          </div>
+
+          <div class="cert-grid">
+            <div>
+              <div class="cert-item-lbl">Nomor Identifikasi Batch</div>
+              <div id="certBatchId" class="cert-item-val mono">BATCH-2026-001</div>
+            </div>
+            <div>
+              <div class="cert-item-lbl">Asal Kebun / Blok</div>
+              <div id="certEstate" class="cert-item-val">Kebun Riau Afdeling 1 - Blok A-08</div>
+            </div>
+            <div>
+              <div class="cert-item-lbl">Waktu Panen</div>
+              <div id="certHarvestTime" class="cert-item-val mono">2026-10-29 05:30</div>
+            </div>
+            <div>
+              <div class="cert-item-lbl">Waktu Uji Laboratorium</div>
+              <div id="certTestTime" class="cert-item-val mono">2026-10-29 13:30</div>
+            </div>
+            <div>
+              <div class="cert-item-lbl">Lama Simpan (Hold Time)</div>
+              <div id="certHoldHours" class="cert-item-val mono">8.0 Jam</div>
+            </div>
+            <div>
+              <div class="cert-item-lbl">Berat Total Lot</div>
+              <div id="certWeight" class="cert-item-val mono">42.5 Ton Metrik</div>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 1.5rem; background: #f1f5f9; padding: 1rem; border-radius: var(--radius-sm);">
+            <div style="font-size: 0.72rem; color: #64748b; font-weight: 700; text-transform: uppercase; margin-bottom: 0.4rem;">
+              Hasil Uji Fisik &amp; Kimia Terverifikasi:
+            </div>
+            <div style="display: flex; gap: 1.5rem; font-family: var(--font-mono); font-size: 0.86rem; font-weight: 700; color: #0f172a;">
+              <span>FFA: <span id="certFfa">1.65 %</span></span>
+              <span>pH: <span id="certPh">6.40</span></span>
+              <span>Air: <span id="certMoisture">0.15 %</span></span>
+              <span>Viskositas: <span id="certViscosity">44 cSt</span></span>
+            </div>
+          </div>
+
+          <div style="border: 1px solid #0f172a; padding: 1rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem;">
+            <div style="font-size: 0.7rem; color: #64748b; text-transform: uppercase; font-weight: 700;">
+              Keputusan Disposisi Hilirisasi:
+            </div>
+            <div id="certAllocation" style="font-size: 1.15rem; font-weight: 800; color: #0f172a; margin-top: 0.2rem;">
+              Minyak Sawit Konsumsi Super (Cooking Oil Grade A)
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.8rem; color: #475569;">
+              <span id="certTrack">DEFAULT TRACK (CPO Pangan Standar SNI 7709)</span>
+              <span>Indeks Keyakinan: <strong id="certConfidence" class="mono">97%</strong></span>
+            </div>
+          </div>
+
+          <div class="cert-sign-row">
+            <div class="cert-sign-box">
+              <div class="cert-sign-role">Kepala Laboratorium QC</div>
+              <div class="cert-sign-line"></div>
+              <div class="cert-sign-name">Dr. Ir. Hendra Gunawan, M.T.</div>
+            </div>
+            <div class="cert-sign-box">
+              <div class="cert-sign-role">Manajer Operasional PKS</div>
+              <div class="cert-sign-line"></div>
+              <div class="cert-sign-name">Budi Santoso, S.T.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btnPrintCertificate" class="btn btn-primary">
+          Cetak / Simpan PDF
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Application Script Files in Execution Order -->
+  <script src="js/batch-data.js"></script>
+  <script src="js/logic-engine.js"></script>
+  <script src="js/flowchart-viz.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/gemini-service.js"></script>
+  <script src="js/api-client.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
