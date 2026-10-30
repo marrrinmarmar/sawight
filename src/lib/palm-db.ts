@@ -15,6 +15,7 @@ export type PalmBatch = {
   batch_id: string;
   lokasi_kebun: string;
   tanggal_panen: string;
+  jam_masuk?: string;
   lama_penyimpanan_jam: number;
   warna: string;
   viskositas_mPa_s: number;
@@ -29,8 +30,14 @@ export type PalmBatch = {
   confidence_score: number;
   ai_explanation: string;
   action_steps: string[];
-  status: string;
+  status: string; // "WAITING_LAB" | "READY_WAREHOUSE" | "DISPATCHED" | custom text
   created_at: string;
+  lab_tested_at?: string;
+  lab_analyst?: string;
+  lab_certificate_no?: string;
+  dispatched_at?: string;
+  dispatch_destination?: string;
+  dispatch_notes?: string;
   details?: Partial<PalmEvaluation["details"]>;
 };
 
@@ -92,6 +99,7 @@ function create(data: PalmParams & Partial<PalmBatch>, evaluation: PalmEvaluatio
     batch_id,
     lokasi_kebun: data.lokasi_kebun || "Kebun PKS Sawit Makmur",
     tanggal_panen: data.tanggal_panen || new Date().toISOString(),
+    jam_masuk: data.jam_masuk || new Date().toISOString(),
     lama_penyimpanan_jam: Number(data.lama_penyimpanan_jam) || 0,
     warna: data.warna || "Sangat Merah Kecoklatan",
     viskositas_mPa_s: Number(data.viskositas_mPa_s) || 45,
@@ -106,7 +114,7 @@ function create(data: PalmParams & Partial<PalmBatch>, evaluation: PalmEvaluatio
     confidence_score: evaluation.confidence_score,
     ai_explanation: evaluation.ai_explanation,
     action_steps: evaluation.action_steps,
-    status: `Dispatched ke ${evaluation.primary_recommendation.split("/")[0].trim()}`,
+    status: data.status || `READY_WAREHOUSE`,
     created_at: new Date().toISOString(),
     details: evaluation.details,
   };
@@ -115,6 +123,65 @@ function create(data: PalmParams & Partial<PalmBatch>, evaluation: PalmEvaluatio
   batches.unshift(newBatch);
   saveBatches(batches);
   return newBatch;
+}
+
+function createFromPengelola(data: {
+  batch_id?: string;
+  lokasi_kebun: string;
+  tanggal_panen?: string;
+  jam_masuk: string;
+  berat_ton: number;
+  lama_penyimpanan_jam: number;
+}): PalmBatch {
+  const batches = loadBatches();
+  const now = new Date();
+  const dateStr = now.toISOString().slice(0, 10).replace(/-/g, "");
+  const timeStr = String(now.getHours()).padStart(2, "0") + String(now.getMinutes()).padStart(2, "0");
+  const batch_id = data.batch_id?.trim() || `LOT-${dateStr}-${timeStr}`;
+
+  const newBatch: PalmBatch = {
+    batch_id,
+    lokasi_kebun: data.lokasi_kebun || "PKS Sawit Intake - Line 1",
+    tanggal_panen: data.tanggal_panen || data.jam_masuk || new Date().toISOString(),
+    jam_masuk: data.jam_masuk || new Date().toISOString(),
+    lama_penyimpanan_jam: Number(data.lama_penyimpanan_jam) || 0,
+    warna: "Belum Diuji",
+    viskositas_mPa_s: 0,
+    pH: 0,
+    kadar_ffa_percent: 0,
+    moisture_percent: 0,
+    berat_ton: Number(data.berat_ton) || 0,
+    track_type: "PENDING",
+    category: "MENUNGGU_LAB",
+    primary_recommendation: "Menunggu Pengujian Lab & Validasi Mutu",
+    alternate_recommendation: "-",
+    confidence_score: 0,
+    ai_explanation: "Bahan cair baru masuk dari ekstraksi pengelola. Mengantre untuk pengujian lab (pH, FFA, viskositas).",
+    action_steps: [
+      "Ambil sampel representatif dari tangki penampung sementara.",
+      "Lakukan pengujian pH, FFA, kadar air (moisture), dan viskositas di Lab.",
+      "Input hasil pengujian lab untuk alokasi otomatis AI."
+    ],
+    status: "WAITING_LAB",
+    created_at: new Date().toISOString(),
+  };
+
+  batches.unshift(newBatch);
+  saveBatches(batches);
+  return newBatch;
+}
+
+function updateBatch(batchId: string, patch: Partial<PalmBatch>): PalmBatch | null {
+  const batches = loadBatches();
+  const index = batches.findIndex((b) => b.batch_id === batchId);
+  if (index === -1) return null;
+
+  batches[index] = {
+    ...batches[index],
+    ...patch,
+  };
+  saveBatches(batches);
+  return batches[index];
 }
 
 function remove(batchId: string): boolean {
@@ -198,6 +265,8 @@ export const palmDb = {
   getAll,
   getById,
   create,
+  createFromPengelola,
+  updateBatch,
   remove,
   reset,
   getFactoryBatches,

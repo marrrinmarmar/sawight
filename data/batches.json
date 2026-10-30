@@ -1,5 +1,275 @@
 [
   {
+    "batch_id": "LOT-20261030-2308",
+    "lokasi_kebun": "Kebun Riau Afdeling 1 - Blok A-08",
+    "tanggal_panen": "2026-10-30T08:06:00.000Z",
+    "jam_masuk": "2026-10-30T16:08:00.000Z",
+    "lama_penyimpanan_jam": 8,
+    "warna": "Cokelat Gelap",
+    "viskositas_mPa_s": 9,
+    "pH": 6,
+    "kadar_ffa_percent": 2.9,
+    "moisture_percent": 0.22,
+    "berat_ton": 26.5,
+    "track_type": "FLEX",
+    "category": "BIO_ECO_FRIENDLY",
+    "primary_recommendation": "Renewable Diesel (HVO / Green Diesel) & Bio-Aviation SAF",
+    "alternate_recommendation": "Biodiesel FAME Mandat B35/B40",
+    "confidence_score": 86.5,
+    "ai_explanation": "Meskipun penyimpanan 8 jam melampaui batas minyak makan, profil FFA (2.90%) dan kelembaban (0.22%) sangat ideal untuk proses hydrotreated vegetable oil (HVO) tanpa meracuni katalis Ni-Mo/Al2O3.",
+    "action_steps": [
+      "Pre-treatment deep degumming untuk memangkas kandungan fosfor (P < 5 ppm) dan logam alkali.",
+      "Arahkan ke reaktor hydrodeoxygenation (HDO) katalitik suhu 320-380°C pada tekanan 60 bar.",
+      "Lakukan hydroisomerization untuk menghasilkan Green Diesel berangka setana > 70."
+    ],
+    "status": "READY_WAREHOUSE",
+    "created_at": "2026-10-30T16:08:43.439Z",
+    "lab_tested_at": "2026-10-30T16:09:38.705Z",
+    "lab_analyst": "Analis Lab Utama PKS",
+    "lab_certificate_no": "COA/LAB/2026/20261030-2308",
+    "details": {
+      "tanggal_panen": "2026-10-30T08:06:00.000Z",
+      "lama_penyimpanan_jam": 8,
+      "warna": "Cokelat Gelap",
+      "viskositas_mPa_s": 9,
+      "pH": 6,
+      "kadar_ffa_percent": 2.9,
+      "moisture_percent": 0.22,
+      "berat_ton": 26.5,
+      "lokasi_kebun": "Kebun Riau Afdeling 1 - Blok A-08",
+      "estimated_value_idr": 402800000,
+      "co2_reduction_kg": 49025,
+      "active_flow_paths": [
+        "path-1",
+        "path-2",
+        "path-3",
+        "path-flex",
+        "path-bio-yes",
+        "path-diolah"
+      ],
+      "evaluated_at": "2026-10-30T23:09:37.971000",
+      "engine_version": "Sawight Real Report Engine v2.0 (Full Python)",
+      "engine_mode": "Python Real Report Analyzer + ML"
+    }
+  },
+  {
+    "batch_id": "LOT-20261030-2258",
+    "lokasi_kebun": "Kebun Riau Afdeling 1 - Blok A-08",
+    "tanggal_panen": "2026-10-30T07:58:00.000Z",
+    "jam_masuk": "2026-10-30T15:58:00.000Z",
+    "lama_penyimpanan_jam": 8,
+    "warna": "Sangat Merah Kecoklatan",
+    "viskositas_mPa_s": 45,
+    "pH": 6.2,
+    "kadar_ffa_percent": 2.1,
+    "moisture_percent": 0.22,
+    "berat_ton": 26.5,
+    "track_type": "DEFAULT",
+    "category": "CPO_DEFAULT",
+    "primary_recommendation": "Minyak Sawit Konsumsi Super (Cooking Oil Grade A - SNI 7709)",
+    "alternate_recommendation": "Biofuel HVO Premium (Green Aviation Fuel Blend)",
+    "confidence_score": 82.1,
+    "ai_explanation": "Lot LOT-20261030-2258 dipanen segar dengan hold time 8 jam. Kadar FFA 2.10% dan pH 6.20 berada pada mutu prima SNI 7709 (Cooking Oil Grade A). Integritas trigliserida optimal untuk fraksinasi olein minyak goreng konsumsi.",
+    "action_steps": [
+      "Lakukan sterilisasi TBS pada tekanan 3.0 bar selama 90 menit untuk inaktivasi enzim lipase.",
+      "Ekstraksi minyak menggunakan screw press kemudian alirkan ke tangki klarifikasi.",
+      "Arahkan CPO ke unit Refinery & Fraksinasi pangan untuk pemurnian Olein dan Stearin."
+    ],
+    "status": "DISPATCHED",
+    "created_at": "2026-10-30T15:58:47.922Z",
+    "lab_tested_at": "2026-10-30T15:58:58.381Z",
+    "lab_analyst": "Analis Lab Utama PKS",
+    "lab_certificate_no": "COA/LAB/2026/20261030-2258",
+    "details": {
+      "tanggal_panen": "2026-10-30T07:58:00.000Z",
+      "lama_penyimpanan_jam": 8,
+      "warna": "Sangat Merah Kecoklatan",
+      "viskositas_mPa_s": 45,
+      "pH": 6.2,
+      "kadar_ffa_percent": 2.1,
+      "moisture_percent": 0.22,
+      "berat_ton": 26.5,
+      "lokasi_kebun": "Kebun Riau Afdeling 1 - Blok A-08",
+      "estimated_value_idr": 392200000,
+      "co2_reduction_kg": 16430,
+      "active_flow_paths": [
+        "path-1",
+        "path-2",
+        "path-3",
+        "path-default"
+      ],
+      "evaluated_at": "2026-10-30T22:58:57.606578",
+      "engine_version": "Sawight Real Report Engine v2.0 (Full Python)",
+      "engine_mode": "Python Real Report Analyzer + ML"
+    },
+    "dispatched_at": "2026-10-30T16:05:21.569Z",
+    "dispatch_destination": "PT Wilmar Nabati Indonesia - Pelabuhan Dumai",
+    "dispatch_notes": "Pengiriman via Kapal Tongkang CPO-04"
+  },
+  {
+    "batch_id": "LOT-20261030-2254",
+    "lokasi_kebun": "Kebun Riau Afdeling 1 - Blok A-08",
+    "tanggal_panen": "2026-10-30T07:54:00.000Z",
+    "jam_masuk": "2026-10-30T15:54:00.000Z",
+    "lama_penyimpanan_jam": 8,
+    "warna": "Sangat Merah Kecoklatan",
+    "viskositas_mPa_s": 45,
+    "pH": 6.2,
+    "kadar_ffa_percent": 2.1,
+    "moisture_percent": 0.22,
+    "berat_ton": 8.2,
+    "track_type": "DEFAULT",
+    "category": "CPO_DEFAULT",
+    "primary_recommendation": "Minyak Sawit Konsumsi Super (Cooking Oil Grade A - SNI 7709)",
+    "alternate_recommendation": "Biofuel HVO Premium (Green Aviation Fuel Blend)",
+    "confidence_score": 83.6,
+    "ai_explanation": "Lot LOT-20261030-2254 dipanen segar dengan hold time 8 jam. Kadar FFA 2.10% dan pH 6.20 berada pada mutu prima SNI 7709 (Cooking Oil Grade A). Integritas trigliserida optimal untuk fraksinasi olein minyak goreng konsumsi.",
+    "action_steps": [
+      "Lakukan sterilisasi TBS pada tekanan 3.0 bar selama 90 menit untuk inaktivasi enzim lipase.",
+      "Ekstraksi minyak menggunakan screw press kemudian alirkan ke tangki klarifikasi.",
+      "Arahkan CPO ke unit Refinery & Fraksinasi pangan untuk pemurnian Olein dan Stearin."
+    ],
+    "status": "DISPATCHED",
+    "created_at": "2026-10-30T15:54:27.362Z",
+    "lab_tested_at": "2026-10-30T15:54:42.128Z",
+    "lab_analyst": "Analis Lab Utama PKS",
+    "lab_certificate_no": "COA/LAB/2026/20261030-2254",
+    "details": {
+      "tanggal_panen": "2026-10-30T07:54:00.000Z",
+      "lama_penyimpanan_jam": 8,
+      "warna": "Sangat Merah Kecoklatan",
+      "viskositas_mPa_s": 45,
+      "pH": 6.2,
+      "kadar_ffa_percent": 2.1,
+      "moisture_percent": 0.22,
+      "berat_ton": 8.2,
+      "lokasi_kebun": "Kebun Riau Afdeling 1 - Blok A-08",
+      "estimated_value_idr": 121360000,
+      "co2_reduction_kg": 5084,
+      "active_flow_paths": [
+        "path-1",
+        "path-2",
+        "path-3",
+        "path-default"
+      ],
+      "evaluated_at": "2026-10-30T22:54:41.446026",
+      "engine_version": "Sawight Real Report Engine v2.0 (Full Python)",
+      "engine_mode": "Python Real Report Analyzer + ML"
+    },
+    "dispatched_at": "2026-10-30T16:05:19.513Z",
+    "dispatch_destination": "PT Wilmar Nabati Indonesia - Pelabuhan Dumai",
+    "dispatch_notes": "Pengiriman via Kapal Tongkang CPO-04"
+  },
+  {
+    "batch_id": "LOT-20261030-2249",
+    "lokasi_kebun": "Kebun Riau Afdeling 2 - Blok B-12",
+    "tanggal_panen": "2026-10-30T06:49:00.000Z",
+    "jam_masuk": "2026-10-30T15:49:00.000Z",
+    "lama_penyimpanan_jam": 9,
+    "warna": "Sangat Merah Kecoklatan",
+    "viskositas_mPa_s": 45,
+    "pH": 6.2,
+    "kadar_ffa_percent": 2.1,
+    "moisture_percent": 0.22,
+    "berat_ton": 6.6,
+    "track_type": "DEFAULT",
+    "category": "CPO_DEFAULT",
+    "primary_recommendation": "Minyak Sawit Konsumsi Super (Cooking Oil Grade A - SNI 7709)",
+    "alternate_recommendation": "Biofuel HVO Premium (Green Aviation Fuel Blend)",
+    "confidence_score": 83.5,
+    "ai_explanation": "Lot LOT-20261030-2249 dipanen segar dengan hold time 9 jam. Kadar FFA 2.10% dan pH 6.20 berada pada mutu prima SNI 7709 (Cooking Oil Grade A). Integritas trigliserida optimal untuk fraksinasi olein minyak goreng konsumsi.",
+    "action_steps": [
+      "Lakukan sterilisasi TBS pada tekanan 3.0 bar selama 90 menit untuk inaktivasi enzim lipase.",
+      "Ekstraksi minyak menggunakan screw press kemudian alirkan ke tangki klarifikasi.",
+      "Arahkan CPO ke unit Refinery & Fraksinasi pangan untuk pemurnian Olein dan Stearin."
+    ],
+    "status": "DISPATCHED",
+    "created_at": "2026-10-30T15:49:57.208Z",
+    "lab_tested_at": "2026-10-30T15:50:12.924Z",
+    "lab_analyst": "Analis Lab Utama PKS",
+    "lab_certificate_no": "COA/LAB/2026/20261030-2249",
+    "details": {
+      "tanggal_panen": "2026-10-30T06:49:00.000Z",
+      "lama_penyimpanan_jam": 9,
+      "warna": "Sangat Merah Kecoklatan",
+      "viskositas_mPa_s": 45,
+      "pH": 6.2,
+      "kadar_ffa_percent": 2.1,
+      "moisture_percent": 0.22,
+      "berat_ton": 6.6,
+      "lokasi_kebun": "Kebun Riau Afdeling 2 - Blok B-12",
+      "estimated_value_idr": 97680000,
+      "co2_reduction_kg": 4092,
+      "active_flow_paths": [
+        "path-1",
+        "path-2",
+        "path-3",
+        "path-default"
+      ],
+      "evaluated_at": "2026-10-30T22:50:12.248290",
+      "engine_version": "Sawight Real Report Engine v2.0 (Full Python)",
+      "engine_mode": "Python Real Report Analyzer + ML"
+    },
+    "dispatched_at": "2026-10-30T16:05:17.315Z",
+    "dispatch_destination": "PT Wilmar Nabati Indonesia - Pelabuhan Dumai",
+    "dispatch_notes": "Pengiriman via Kapal Tongkang CPO-04"
+  },
+  {
+    "batch_id": "LOT-20261030-2238",
+    "lokasi_kebun": "Kebun Kaltim Paser - Line 2",
+    "tanggal_panen": "2026-10-30T11:30:00.000Z",
+    "jam_masuk": "2026-10-30T15:39:00.000Z",
+    "lama_penyimpanan_jam": 4.2,
+    "warna": "Cokelat Gelap",
+    "viskositas_mPa_s": 131,
+    "pH": 3.65,
+    "kadar_ffa_percent": 4,
+    "moisture_percent": 0.57,
+    "berat_ton": 30,
+    "track_type": "FLEX",
+    "category": "OTHER_PRODUCTS",
+    "primary_recommendation": "Pupuk Kompos Biologis & Pembangkit Biogas Metana",
+    "alternate_recommendation": "Pembuangan Residu Terkontrol (Safe Bio-Incineration)",
+    "confidence_score": 88.4,
+    "ai_explanation": "Batch mengalami degradasi biologis berat (FFA 4.00%, pH asam 3.65, hold time 4.2 jam). Sangat efektif dialirkan ke biodigester anaerobik untuk gas metana dan kompos kaya N-P-K.",
+    "action_steps": [
+      "Alirkan substrat ke dalam CSTR Anaerobic Biodigester untuk penangkapan gas metana listrik.",
+      "Campurkan bio-slurry hasil digestasi dengan cacahan tandan kosong kelapa sawit (EFB).",
+      "Lakukan windrow composting aerobik selama 35 hari hingga matang sempurna untuk kebun."
+    ],
+    "status": "DISPATCHED",
+    "created_at": "2026-10-30T15:39:29.058Z",
+    "lab_tested_at": "2026-10-30T15:42:02.072Z",
+    "lab_analyst": "Analis Lab Utama PKS",
+    "lab_certificate_no": "COA/LAB/2026/20261030-2238",
+    "details": {
+      "tanggal_panen": "2026-10-30T11:30:00.000Z",
+      "lama_penyimpanan_jam": 4.2,
+      "warna": "Cokelat Gelap",
+      "viskositas_mPa_s": 131,
+      "pH": 3.65,
+      "kadar_ffa_percent": 4,
+      "moisture_percent": 0.57,
+      "berat_ton": 30,
+      "lokasi_kebun": "Kebun Kaltim Paser - Line 2",
+      "estimated_value_idr": 144000000,
+      "co2_reduction_kg": 26700,
+      "active_flow_paths": [
+        "path-1",
+        "path-2",
+        "path-3",
+        "path-flex",
+        "path-bio-no"
+      ],
+      "evaluated_at": "2026-10-30T22:42:01.417863",
+      "engine_version": "Sawight Real Report Engine v2.0 (Full Python)",
+      "engine_mode": "Python Real Report Analyzer + ML"
+    },
+    "dispatched_at": "2026-10-30T16:05:15.084Z",
+    "dispatch_destination": "PT Wilmar Nabati Indonesia - Pelabuhan Dumai",
+    "dispatch_notes": "Pengiriman via Kapal Tongkang CPO-04"
+  },
+  {
     "batch_id": "LOT-20261030-0325",
     "lokasi_kebun": "Kebun Riau Afdeling 1 - Blok A-08",
     "tanggal_panen": "2026-10-30T13:25:00.000Z",
@@ -21,7 +291,7 @@
       "Ekstraksi sweet water untuk evaporasi menjadi gliserin teknis.",
       "Distilasi fraksional vakum asam lemak untuk pelumas industri dan lilin sintetis."
     ],
-    "status": "Dispatched ke Oleokimia Industri Non-Biofuel (Fatty Acids & Glycerol Splitting)",
+    "status": "DISPATCHED",
     "created_at": "2026-10-30T13:26:32.043Z",
     "details": {
       "tanggal_panen": "2026-10-30T13:25:00.000Z",
@@ -45,7 +315,10 @@
       "evaluated_at": "2026-10-30T20:26:31.319599",
       "engine_version": "Sawight Real Report Engine v2.0 (Full Python)",
       "engine_mode": "Python Real Report Analyzer + ML"
-    }
+    },
+    "dispatched_at": "2026-10-30T16:05:12.389Z",
+    "dispatch_destination": "PT Wilmar Nabati Indonesia - Pelabuhan Dumai",
+    "dispatch_notes": "Pengiriman via Kapal Tongkang CPO-04"
   },
   {
     "batch_id": "LOT-20261030-0323",
@@ -69,7 +342,7 @@
       "Arahkan ke reaktor hydrodeoxygenation (HDO) katalitik suhu 320-380°C pada tekanan 60 bar.",
       "Lakukan hydroisomerization untuk menghasilkan Green Diesel berangka setana > 70."
     ],
-    "status": "Dispatched ke Renewable Diesel (HVO",
+    "status": "DISPATCHED",
     "created_at": "2026-10-30T13:24:26.172Z",
     "details": {
       "tanggal_panen": "2026-10-30T13:23:00.000Z",
@@ -94,7 +367,10 @@
       "evaluated_at": "2026-10-30T20:24:25.488066",
       "engine_version": "Sawight Real Report Engine v2.0 (Full Python)",
       "engine_mode": "Python Real Report Analyzer + ML"
-    }
+    },
+    "dispatched_at": "2026-10-30T16:04:52.515Z",
+    "dispatch_destination": "PT Wilmar Nabati Indonesia - Pelabuhan Dumai",
+    "dispatch_notes": "Pengiriman via Kapal Tongkang CPO-04"
   },
   {
     "batch_id": "LOT-20261030-0320",
@@ -119,7 +395,7 @@
       "Sentrifugasi pemisahan fase metil ester atas dan fase gliserol mentah bawah.",
       "Dry washing dengan adsorben ion-exchange resin untuk mencapai standar kemurnian B35/B40."
     ],
-    "status": "Dispatched ke Biofuel Biodiesel FAME (Fatty Acid Methyl Ester) Mandat B35",
+    "status": "DISPATCHED",
     "created_at": "2026-10-30T13:21:15.781Z",
     "details": {
       "tanggal_panen": "2026-10-30T13:20:00.000Z",
@@ -144,7 +420,10 @@
       "evaluated_at": "2026-10-30T20:21:15.092629",
       "engine_version": "Sawight Real Report Engine v2.0 (Full Python)",
       "engine_mode": "Python Real Report Analyzer + ML"
-    }
+    },
+    "dispatched_at": "2026-10-30T16:04:50.023Z",
+    "dispatch_destination": "PT Wilmar Nabati Indonesia - Pelabuhan Dumai",
+    "dispatch_notes": "Pengiriman via Kapal Tongkang CPO-04"
   },
   {
     "batch_id": "LOT-20261030-0310",
@@ -168,7 +447,7 @@
       "Ekstraksi minyak menggunakan screw press kemudian alirkan ke tangki klarifikasi.",
       "Arahkan CPO ke unit Refinery & Fraksinasi pangan untuk pemurnian Olein dan Stearin."
     ],
-    "status": "Dispatched ke Minyak Sawit Konsumsi Super (Cooking Oil Grade A - SNI 7709)",
+    "status": "DISPATCHED",
     "created_at": "2026-10-30T13:10:33.399Z",
     "details": {
       "tanggal_panen": "2026-10-30T13:09:00.000Z",
@@ -191,7 +470,10 @@
       "evaluated_at": "2026-10-30T20:10:32.690767",
       "engine_version": "Sawight Real Report Engine v2.0 (Full Python)",
       "engine_mode": "Python Real Report Analyzer + ML"
-    }
+    },
+    "dispatched_at": "2026-10-30T16:04:04.389Z",
+    "dispatch_destination": "PT Wilmar Nabati Indonesia - Pelabuhan Dumai",
+    "dispatch_notes": "Pengiriman via Kapal Tongkang CPO-04"
   },
   {
     "batch_id": "LOT-20261030-0309",
@@ -215,7 +497,7 @@
       "Arahkan ke reaktor hydrodeoxygenation (HDO) katalitik suhu 320-380°C pada tekanan 60 bar.",
       "Lakukan hydroisomerization untuk menghasilkan Green Diesel berangka setana > 70."
     ],
-    "status": "Dispatched ke Renewable Diesel (HVO",
+    "status": "DISPATCHED",
     "created_at": "2026-10-30T13:09:48.637Z",
     "details": {
       "tanggal_panen": "2026-10-30T13:09:00.000Z",
@@ -240,7 +522,10 @@
       "evaluated_at": "2026-10-30T20:09:47.934952",
       "engine_version": "Sawight Real Report Engine v2.0 (Full Python)",
       "engine_mode": "Python Real Report Analyzer + ML"
-    }
+    },
+    "dispatched_at": "2026-10-30T16:04:08.724Z",
+    "dispatch_destination": "PT Wilmar Nabati Indonesia - Pelabuhan Dumai",
+    "dispatch_notes": "Pengiriman via Kapal Tongkang CPO-04"
   },
   {
     "batch_id": "LOT-20261030-2006",
@@ -264,7 +549,7 @@
       "Ekstraksi minyak menggunakan screw press kemudian alirkan ke tangki klarifikasi.",
       "Arahkan CPO ke unit Refinery & Fraksinasi pangan untuk pemurnian Olein dan Stearin."
     ],
-    "status": "Dispatched ke Minyak Sawit Konsumsi Super (Cooking Oil Grade A - SNI 7709)",
+    "status": "DISPATCHED",
     "created_at": "2026-10-30T13:06:47.024Z",
     "details": {
       "tanggal_panen": "2026-10-30T13:06:44.826Z",
@@ -287,6 +572,9 @@
       "evaluated_at": "2026-10-30T20:06:46.249393",
       "engine_version": "Sawight Real Report Engine v2.0 (Full Python)",
       "engine_mode": "Python Real Report Analyzer + ML"
-    }
+    },
+    "dispatched_at": "2026-10-30T15:50:54.446Z",
+    "dispatch_destination": "PT Wilmar Nabati Indonesia - Pelabuhan Dumai",
+    "dispatch_notes": "Pengiriman via Kapal Tongkang CPO-04"
   }
 ]

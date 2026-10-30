@@ -63,3 +63,24 @@ export function createBatch(batch: PalmParams, geminiKey?: string) {
     headers: geminiKey ? { "x-gemini-key": geminiKey } : undefined,
   });
 }
+
+export function createPengelolaBatch(data: {
+  batch_id?: string;
+  lokasi_kebun: string;
+  tanggal_panen?: string;
+  jam_masuk: string;
+  berat_ton: number;
+  lama_penyimpanan_jam: number;
+}) {
+  return http<{ success: boolean; message: string; data: PalmBatch }>("/api/batch", {
+    method: "POST",
+    body: JSON.stringify({ ...data, action: "pengelola_intake" }),
+  });
+}
+
+export function patchBatch(id: string, patch: Partial<PalmBatch>) {
+  return http<{ success: boolean; message: string; data: PalmBatch }>(`/api/batch/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(patch),
+  });
+}

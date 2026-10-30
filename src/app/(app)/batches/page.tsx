@@ -13,20 +13,20 @@ export default function BatchesPage() {
   const [resetting, setResetting] = useState(false);
   const [flash, setFlash] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
-    setLoading(true);
+  const load = useCallback(async (isBackground = false) => {
+    if (!isBackground) setLoading(true);
     try {
       const data = await listBatches(search ? { search } : {});
       setBatches(data);
     } catch (err) {
       console.error(err);
     } finally {
-      setLoading(false);
+      if (!isBackground) setLoading(false);
     }
   }, [search]);
 
   useEffect(() => {
-    const t = setTimeout(load, search ? 300 : 0);
+    const t = setTimeout(() => load(false), search ? 300 : 0);
     return () => clearTimeout(t);
   }, [load, search]);
 
@@ -47,7 +47,7 @@ export default function BatchesPage() {
     setResetting(true);
     try {
       await resetBatches();
-      await load();
+      await load(false);
       setFlash("Database berhasil direset ke data awal PKS.");
     } catch (err) {
       setFlash(String(err instanceof Error ? err.message : err));
@@ -61,7 +61,16 @@ export default function BatchesPage() {
     cpo: batches.filter((b) => b.category === "CPO_DEFAULT").length,
     bio: batches.filter((b) => b.category === "BIO_ECO_FRIENDLY").length,
     other: batches.filter((b) => b.category === "OTHER_PRODUCTS").length,
+    dispatched: batches.filter((b) => b.status === "DISPATCHED").length,
   };
+
+  // Polling latar belakang secara silent (isBackground=true) agar dropdown & baris expand tidak tertutup
+  useEffect(() => {
+    const interval = setInterval(() => {
+      load(true);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [load]);
 
   return (
     <>
@@ -106,7 +115,11 @@ export default function BatchesPage() {
         {/* Filter chips */}
         <div className="mt-4 flex flex-wrap items-center gap-2">
           <span className="rounded-lg bg-[#1c1d22] px-2.5 py-1 text-[11px] font-bold text-white">
-            {counts.total} lot
+            {counts.total} lot total
+          </span>
+          <span className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[11px] font-bold text-emerald-800">
+            <span className="size-1.5 rounded-full bg-emerald-600" />
+            {counts.dispatched} Telah Terdistribusi
           </span>
           <CategoryBadge category="CPO_DEFAULT" />
           <span className="text-[11px] font-bold text-[#65a30d]">{counts.cpo}</span>

@@ -150,3 +150,45 @@
 .scrollbar-slim::-webkit-scrollbar-thumb:hover {
   background: #a6aaa6;
 }
+
+/* Dynamic Smooth Micro-Animations */
+@keyframes slideDownFade {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes highlightGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(132, 204, 22, 0.4);
+    background-color: rgba(247, 254, 231, 0.8);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(132, 204, 22, 0.2);
+    background-color: rgba(247, 254, 231, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(132, 204, 22, 0);
+  }
+}
+
+.animate-slide-down {
+  animation: slideDownFade 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-highlight-new {
+  animation: highlightGlow 2.5s ease-out forwards;
+}
+
+.animate-card-hover {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+}
+.animate-card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.08);
+}
