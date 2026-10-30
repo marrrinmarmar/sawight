@@ -96,7 +96,7 @@ export default function DashboardPage() {
       </div>
 
       {/* KPI mutu */}
-      <PalmKpiCards stats={stats} />
+      <PalmKpiCards stats={stats} batches={batches} />
 
       {/* Charts: alokasi + korelasi */}
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1fr_1.35fr]">
