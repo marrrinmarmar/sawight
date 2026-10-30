@@ -82,7 +82,11 @@ function getById(batchId: string): PalmBatch | null {
 function create(data: PalmParams & Partial<PalmBatch>, evaluation: PalmEvaluation): PalmBatch {
   const batches = loadBatches();
 
-  const batch_id = data.batch_id || `LOT-${Date.now().toString().slice(-6)}`;
+  // Pertahankan batch_id dari data atau evaluasi, jika kosong buat dengan format standar LOT-YYYYMMDD-HHMM
+  const now = new Date();
+  const dateStr = now.toISOString().slice(0, 10).replace(/-/g, "");
+  const timeStr = String(now.getHours()).padStart(2, "0") + String(now.getMinutes()).padStart(2, "0");
+  const batch_id = data.batch_id || evaluation.batch_id || `LOT-${dateStr}-${timeStr}`;
 
   const newBatch: PalmBatch = {
     batch_id,

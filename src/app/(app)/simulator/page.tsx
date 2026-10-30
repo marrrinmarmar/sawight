@@ -59,11 +59,16 @@ export default function SimulatorPage() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [result, setResult] = useState<PalmEvaluation | null>(null);
 
-  // Fill default harvest time on the client (environment-dependent value)
+  // Inisialisasi default batch_id dan waktu panen
   useEffect(() => {
     const now = new Date();
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
     set("tanggal_panen", now.toISOString().slice(0, 16));
+
+    // Generate batch_id standar: LOT-YYYYMMDD-HHMM
+    const dateStr = now.toISOString().slice(0, 10).replace(/-/g, "");
+    const timeStr = String(now.getHours()).padStart(2, "0") + String(now.getMinutes()).padStart(2, "0");
+    set("batch_id", `LOT-${dateStr}-${timeStr}`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -72,7 +77,7 @@ export default function SimulatorPage() {
 
   const params: PalmParams = useMemo(
     () => ({
-      batch_id: form.batch_id || undefined,
+      batch_id: form.batch_id.trim() || undefined,
       lokasi_kebun: form.lokasi_kebun,
       tanggal_panen: form.tanggal_panen
         ? new Date(form.tanggal_panen).toISOString()
@@ -97,26 +102,35 @@ export default function SimulatorPage() {
       const geminiKey = localStorage.getItem("palmqual_gemini_key") || undefined;
       const data = await analyzeSample(params, geminiKey);
       setResult(data);
+      // Sinkronkan form batch_id dengan ID hasil evaluasi
+      if (data.batch_id && data.batch_id !== form.batch_id) {
+        set("batch_id", data.batch_id);
+      }
     } catch (err) {
       setErrorMsg(String(err instanceof Error ? err.message : err));
     } finally {
       setLoading(false);
     }
-  }, [params]);
+  }, [params, form.batch_id]);
 
   const handleSave = useCallback(async () => {
     setSaving(true);
     setErrorMsg(null);
     try {
       const geminiKey = localStorage.getItem("palmqual_gemini_key") || undefined;
-      const res = await createBatch(params, geminiKey);
+      // Gunakan batch_id persis yang tertera di kartu hasil evaluasi
+      const payloadToSave = {
+        ...params,
+        batch_id: result?.batch_id || params.batch_id,
+      };
+      const res = await createBatch(payloadToSave, geminiKey);
       setSavedMsg(res.message);
     } catch (err) {
       setErrorMsg(String(err instanceof Error ? err.message : err));
     } finally {
       setSaving(false);
     }
-  }, [params]);
+  }, [params, result]);
 
   return (
     <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1fr_1.25fr]">
@@ -297,6 +311,11 @@ export default function SimulatorPage() {
                   <span className="rounded-lg bg-gray-100 px-2.5 py-1 text-[11px] font-bold text-gray-500">
                     Track {result.track_type}
                   </span>
+                  {result.details.engine_mode?.includes("Python") && (
+                    <span className="rounded-lg bg-emerald-50 px-2.5 py-1 text-[11px] font-bold text-emerald-600">
+                      Python AI Engine
+                    </span>
+                  )}
                   {result.details.engine_mode?.includes("Gemini") && (
                     <span className="rounded-lg bg-violet-50 px-2.5 py-1 text-[11px] font-bold text-violet-600">
                       Gemini AI
