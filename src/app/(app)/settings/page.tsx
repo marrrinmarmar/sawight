@@ -1,128 +1,104 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { BadgeCheck, KeyRound, ShieldCheck } from "lucide-react";
+import { Activity, Cpu, Database, ShieldCheck } from "lucide-react";
 
 export default function SettingsPage() {
-  const [geminiKey, setGeminiKey] = useState("");
-  const [saved, setSaved] = useState(false);
-
-  useEffect(() => {
-    setGeminiKey(localStorage.getItem("palmqual_gemini_key") || "");
-  }, []);
-
-  const handleSave = () => {
-    if (geminiKey.trim()) {
-      localStorage.setItem("palmqual_gemini_key", geminiKey.trim());
-    } else {
-      localStorage.removeItem("palmqual_gemini_key");
-    }
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
-  };
-
   return (
     <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-      {/* Konfigurasi Model & Gemini API */}
+      {/* Status Engine Full Python & Database */}
       <div className="stat-card-shadow rounded-[1.5rem] bg-white p-5">
         <div className="flex items-center gap-2">
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#eef2e2]">
-            <KeyRound className="size-4.5 text-[#65a30d]" />
+            <Cpu className="size-4.5 text-[#65a30d]" />
           </span>
           <h2 className="text-base font-bold tracking-tight text-[#1c1d22]">
-            Konfigurasi Model &amp; Gemini API
+            Konfigurasi Sistem &amp; AI Engine
           </h2>
         </div>
-        <p className="mt-2 text-[11px] leading-relaxed text-gray-400">
-          Google Gemini API Key <b>(opsional)</b>. Jika kosong, sistem otomatis menjalankan{" "}
-          <b>Rule-Based Engine</b> deterministik dengan presisi tinggi.
+        <p className="mt-2 text-[11px] leading-relaxed text-gray-500">
+          Sistem saat ini beroperasi menggunakan <b>Full Python Real Report &amp; ML Architecture</b> yang terhubung langsung ke database PostgreSQL lokal/remote.
         </p>
 
-        <label className="mb-1.5 mt-4 block text-[11px] font-semibold text-gray-500">
-          Gemini API Key
-        </label>
-        <input
-          type="password"
-          value={geminiKey}
-          onChange={(e) => setGeminiKey(e.target.value)}
-          placeholder="AIza..."
-          className="h-10 w-full rounded-xl border border-gray-100 bg-[#f8f9f6] px-3.5 font-mono text-sm text-gray-700 outline-none transition-colors focus:border-[#a3e635] focus:bg-white"
-        />
-        <div className="mt-3 flex items-center gap-3">
-          <button
-            type="button"
-            onClick={handleSave}
-            className="flex h-10 items-center gap-2 rounded-xl bg-[#1c1d22] px-4 text-xs font-bold text-white transition-colors hover:bg-black"
-          >
-            Simpan Konfigurasi
-          </button>
-          {saved && (
-            <span className="flex items-center gap-1.5 text-xs font-bold text-[#65a30d]">
-              <BadgeCheck className="size-4" /> Tersimpan di perangkat ini
+        <div className="mt-4 space-y-3">
+          <div className="flex items-start justify-between gap-3 rounded-2xl bg-[#f8f9f6] p-4">
+            <div className="flex items-start gap-3">
+              <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-emerald-100/70 text-emerald-700">
+                <Activity className="size-4" />
+              </span>
+              <div>
+                <p className="text-xs font-bold text-[#1c1d22]">Python AI &amp; Real Report Engine</p>
+                <p className="mt-0.5 text-[11px] leading-relaxed text-gray-500">
+                  FastAPI backend di port 8000. Mengkalkulasi alokasi mutu, estimasi valuasi (IDR), dan reduksi emisi CO2 secara deterministik &amp; presisi.
+                </p>
+              </div>
+            </div>
+            <span className="mt-0.5 shrink-0 rounded-full bg-[#eef2e2] px-2.5 py-0.5 text-[9px] font-bold uppercase text-[#65a30d]">
+              AKTIF
             </span>
-          )}
+          </div>
+
+          <div className="flex items-start justify-between gap-3 rounded-2xl bg-[#f8f9f6] p-4">
+            <div className="flex items-start gap-3">
+              <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-blue-100/70 text-blue-700">
+                <Database className="size-4" />
+              </span>
+              <div>
+                <p className="text-xs font-bold text-[#1c1d22]">PostgreSQL Persistence</p>
+                <p className="mt-0.5 text-[11px] leading-relaxed text-gray-500">
+                  Tabel <code>palm_batches</code> tersinkronisasi otomatis untuk setiap analisis sampel baru.
+                </p>
+              </div>
+            </div>
+            <span className="mt-0.5 shrink-0 rounded-full bg-blue-50 px-2.5 py-0.5 text-[9px] font-bold uppercase text-blue-600">
+              TERHUBUNG
+            </span>
+          </div>
         </div>
 
         <div className="mt-4 rounded-xl bg-[#f2f4ef] p-3 text-[11px] leading-relaxed text-gray-500">
-          <b>Mechanism:</b> key disimpan di <code>localStorage</code> browser (tidak pernah
-          dikirim ke mana pun selain endpoint evaluasi). Alternatif: set env{" "}
-          <code>GEMINI_API_KEY</code> pada server untuk mode AI default semua pengguna.
+          <b>Batch ID Generator:</b> Sistem menggunakan penomoran otomatis terstandar <code>LOT-YYYYMMDD-HHMM</code> tanpa memerlukan inputan manual operator.
         </div>
       </div>
 
-      {/* Mode Evaluasi Mutu */}
+      {/* Standar Acuan Regulasi Industri */}
       <div className="stat-card-shadow rounded-[1.5rem] bg-white p-5">
         <div className="flex items-center gap-2">
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-50">
             <ShieldCheck className="size-4.5 text-violet-500" />
           </span>
           <h2 className="text-base font-bold tracking-tight text-[#1c1d22]">
-            Mode Evaluasi Mutu
+            Standar Acuan Regulasi Pabrik
           </h2>
         </div>
+        <p className="mt-2 text-[11px] leading-relaxed text-gray-400">
+          Parameter klasifikasi dan formula kimia mutu diatur berdasarkan standar resmi industri kelapa sawit nasional &amp; internasional.
+        </p>
 
-        <div className="mt-3 space-y-3">
-          {[
-            {
-              title: "Rule-Based Engine (Aktif — Default)",
-              desc: "Klasifikasi deterministik berbasis ambang batas ilmiah: FFA, pH, moisture, viskositas, hold time. Selalu tersedia, tanpa biaya.",
-              active: true,
-            },
-            {
-              title: "Gemini AI Deep Analysis (Aktif bila key tersedia)",
-              desc: "Structured output JSON via gemini-3.8-flash untuk reasoning kasus deviasi kompleks; fallback otomatis ke Rule-Based saat gagal.",
-              active: !!geminiKey,
-            },
-          ].map((m) => (
-            <div
-              key={m.title}
-              className="flex items-start justify-between gap-3 rounded-2xl bg-[#f8f9f6] p-4"
-            >
-              <div>
-                <p className="text-xs font-bold text-[#1c1d22]">{m.title}</p>
-                <p className="mt-1 text-[11px] leading-relaxed text-gray-500">{m.desc}</p>
-              </div>
-              <span
-                className={`mt-0.5 shrink-0 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase ${
-                  m.active ? "bg-[#eef2e2] text-[#65a30d]" : "bg-gray-100 text-gray-400"
-                }`}
-              >
-                {m.active ? "ON" : "OFF"}
-              </span>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-4 rounded-2xl border border-dashed border-gray-200 p-4">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
-            Standar Acuan Regulasi
-          </p>
-          <ul className="mt-2 space-y-1 text-[11px] text-gray-500">
-            <li>• SNI 7709 — Minyak sawit konsumsi (Cooking Oil Grade A)</li>
-            <li>• PORAM Standard — Spesifikasi ekspor Crude Palm Oil</li>
-            <li>• SNI 7182 — Biodiesel FAME (mandat campuran B35/B40)</li>
-            <li>• ISPO/ISCC — Keberlanjutan &amp; akuntansi emisi karbon</li>
-          </ul>
+        <div className="mt-4 space-y-2.5">
+          <div className="rounded-xl border border-gray-100 bg-[#f8f9f6] p-3">
+            <p className="text-xs font-bold text-[#1c1d22]">SNI 7709:2019 — Minyak Goreng Sawit</p>
+            <p className="mt-0.5 text-[11px] text-gray-500">
+              Kadar FFA ≤ 2.5%, hold time ≤ 16 jam, pH 5.5 - 6.8 untuk konsumsi Grade A.
+            </p>
+          </div>
+          <div className="rounded-xl border border-gray-100 bg-[#f8f9f6] p-3">
+            <p className="text-xs font-bold text-[#1c1d22]">PORAM Standard — Crude Palm Oil Ekspor</p>
+            <p className="mt-0.5 text-[11px] text-gray-500">
+              Batas ambang FFA CPO standar pangan ≤ 5.0%, kadar air ≤ 0.25%.
+            </p>
+          </div>
+          <div className="rounded-xl border border-gray-100 bg-[#f8f9f6] p-3">
+            <p className="text-xs font-bold text-[#1c1d22]">SNI 7182 &amp; Mandat Biofuel B35/B40</p>
+            <p className="mt-0.5 text-[11px] text-gray-500">
+              Spesifikasi Fatty Acid Methyl Ester (FAME) dan Renewable Diesel (HVO).
+            </p>
+          </div>
+          <div className="rounded-xl border border-gray-100 bg-[#f8f9f6] p-3">
+            <p className="text-xs font-bold text-[#1c1d22]">ISPO / ISCC GHG Accounting</p>
+            <p className="mt-0.5 text-[11px] text-gray-500">
+              Kalkulasi jejak karbon dan potensi dekarbonisasi industri hilir sawit.
+            </p>
+          </div>
         </div>
       </div>
     </div>

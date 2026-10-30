@@ -5,9 +5,11 @@ import Link from "next/link";
 import {
   ArrowUpRight,
   BadgeCheck,
+  CheckCircle2,
   FlaskConical,
   Leaf,
   Loader2,
+  RotateCcw,
   Save,
   Sparkles,
 } from "lucide-react";
@@ -99,8 +101,7 @@ export default function SimulatorPage() {
     setSavedMsg(null);
     setResult(null);
     try {
-      const geminiKey = localStorage.getItem("palmqual_gemini_key") || undefined;
-      const data = await analyzeSample(params, geminiKey);
+      const data = await analyzeSample(params);
       setResult(data);
       // Sinkronkan form batch_id dengan ID hasil evaluasi
       if (data.batch_id && data.batch_id !== form.batch_id) {
@@ -117,13 +118,11 @@ export default function SimulatorPage() {
     setSaving(true);
     setErrorMsg(null);
     try {
-      const geminiKey = localStorage.getItem("palmqual_gemini_key") || undefined;
-      // Gunakan batch_id persis yang tertera di kartu hasil evaluasi
       const payloadToSave = {
         ...params,
         batch_id: result?.batch_id || params.batch_id,
       };
-      const res = await createBatch(payloadToSave, geminiKey);
+      const res = await createBatch(payloadToSave);
       setSavedMsg(res.message);
     } catch (err) {
       setErrorMsg(String(err instanceof Error ? err.message : err));
@@ -132,17 +131,52 @@ export default function SimulatorPage() {
     }
   }, [params, result]);
 
+  const handleDone = useCallback(() => {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    const dateStr = now.toISOString().slice(0, 10).replace(/-/g, "");
+    const timeStr =
+      String(now.getHours()).padStart(2, "0") + String(now.getMinutes()).padStart(2, "0");
+
+    setResult(null);
+    setSavedMsg(null);
+    setErrorMsg(null);
+    setForm({
+      batch_id: `LOT-${dateStr}-${timeStr}`,
+      lokasi_kebun: "Kebun Riau Afdeling 1 - Blok A-08",
+      tanggal_panen: now.toISOString().slice(0, 16),
+      lama_penyimpanan_jam: 12,
+      warna: COLOR_OPTIONS[0],
+      viskositas_mPa_s: 45,
+      pH: 6.2,
+      kadar_ffa_percent: 2.1,
+      moisture_percent: 0.2,
+      berat_ton: 25,
+    });
+  }, []);
+
   return (
     <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1fr_1.25fr]">
       {/* ============ FORM: Pengujian Sampel Masuk Baru ============ */}
       <div className="stat-card-shadow h-fit rounded-[1.5rem] bg-white p-5">
-        <div className="flex items-center gap-2">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#eef2e2]">
-            <FlaskConical className="size-4 text-[#65a30d]" />
-          </span>
-          <h2 className="text-base font-bold tracking-tight text-[#1c1d22]">
-            Pengujian Sampel Masuk Baru
-          </h2>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#eef2e2]">
+              <FlaskConical className="size-4 text-[#65a30d]" />
+            </span>
+            <h2 className="text-base font-bold tracking-tight text-[#1c1d22]">
+              Pengujian Sampel Masuk Baru
+            </h2>
+          </div>
+          <button
+            type="button"
+            onClick={handleDone}
+            className="flex items-center gap-1.5 rounded-lg border border-gray-100 bg-[#f8f9f6] px-2.5 py-1 text-[11px] font-semibold text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 active:scale-95"
+            title="Reset form dan buat Batch ID baru"
+          >
+            <RotateCcw className="size-3" />
+            Reset Form
+          </button>
         </div>
         <p className="mt-1 text-[11px] text-gray-400">
           Masukkan parameter fisik &amp; kimia sampel untuk evaluasi track alokasi.
@@ -156,13 +190,20 @@ export default function SimulatorPage() {
           className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2"
         >
           <div className="sm:col-span-2">
-            <label className={labelCls}>Batch ID (opsional)</label>
-            <input
-              className={inputCls}
-              value={form.batch_id}
-              onChange={(e) => set("batch_id", e.target.value)}
-              placeholder="LOT-20261029-09"
-            />
+            <div className="flex items-center justify-between">
+              <label className={labelCls}>Batch ID (Terisi Otomatis)</label>
+              <span className="mb-1.5 rounded-full bg-[#eef2e2] px-2 py-0.5 font-mono text-[9px] font-bold text-[#65a30d]">
+                Auto-Generated
+              </span>
+            </div>
+            <div className="relative">
+              <input
+                className={`${inputCls} cursor-not-allowed bg-gray-50/80 font-mono font-medium text-gray-600 select-all`}
+                value={form.batch_id}
+                readOnly
+                tabIndex={-1}
+              />
+            </div>
           </div>
           <div className="sm:col-span-2">
             <label className={labelCls}>Lokasi Kebun / Blok</label>
@@ -381,7 +422,7 @@ export default function SimulatorPage() {
                 ))}
               </ol>
 
-              <div className="mt-4 flex flex-wrap items-center gap-3">
+              <div className="mt-4 flex flex-wrap items-center gap-2.5">
                 <button
                   type="button"
                   onClick={handleSave}
@@ -391,9 +432,18 @@ export default function SimulatorPage() {
                   {saving ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
                   Simpan ke Inventaris
                 </button>
+                <button
+                  type="button"
+                  onClick={handleDone}
+                  className="flex h-10 items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 text-xs font-bold text-gray-700 transition-colors hover:bg-gray-50 active:scale-95"
+                  title="Selesai analisis dan muat ulang form simulator dengan Batch ID baru"
+                >
+                  <CheckCircle2 className="size-4 text-[#65a30d]" />
+                  Done (Refresh)
+                </button>
                 <Link
                   href="/batches"
-                  className="flex h-10 items-center gap-1.5 text-xs font-semibold text-gray-500 transition-colors hover:text-gray-800"
+                  className="flex h-10 items-center gap-1.5 px-2 text-xs font-semibold text-gray-500 transition-colors hover:text-gray-800"
                 >
                   Lihat Inventaris <ArrowUpRight className="size-3.5" />
                 </Link>

@@ -16,8 +16,8 @@ MODEL_PATH = os.path.join(MODEL_DIR, "palm_classifier.joblib")
 
 NUMERIC_FEATURES = [
     "lama_penyimpanan_jam",
-    "viskositas_mPa_s",
-    "pH",
+    "viskositas_mpa_s",
+    "ph",
     "kadar_ffa_percent",
     "moisture_percent",
     "berat_ton",
@@ -30,20 +30,30 @@ def load_data():
     Mengambil data dari PostgreSQL. Jika database belum siap,
     otomatis fallback menggunakan data sampel 'data/factory.json'.
     """
+    df = None
     try:
         print("[DB] Mencoba mengambil dataset pelatihan dari PostgreSQL...")
         df = fetch_training_data_from_db()
         if len(df) > 5:
             print(f"[DB] Berhasil memuat {len(df)} data dari PostgreSQL.")
-            return df
     except Exception as e:
         print(f"[WARN] Gagal membaca dari PostgreSQL ({e}). Menggunakan data fallback lokal.")
 
-    # Fallback ke data JSON lokal proyek
-    json_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "data", "factory.json"))
-    with open(json_path, "r", encoding="utf-8") as f:
-        records = json.load(f)
-    return pd.DataFrame(records)
+    if df is None or len(df) <= 5:
+        json_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "data", "factory.json"))
+        with open(json_path, "r", encoding="utf-8") as f:
+            records = json.load(f)
+        df = pd.DataFrame(records)
+
+    # Standarisasi seluruh nama kolom ke huruf kecil (lowercase)
+    df.columns = [col.lower() for col in df.columns]
+
+    # Pastikan tipe data numerik dikonversi ke float
+    for col in NUMERIC_FEATURES:
+        if col in df.columns:
+            df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0.0)
+
+    return df
 
 def train():
     df = load_data()

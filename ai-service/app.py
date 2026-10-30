@@ -320,8 +320,8 @@ def analyze_batch_report(payload: dict):
             input_df = pd.DataFrame([{
                 "lama_penyimpanan_jam": batch.lama_penyimpanan_jam,
                 "warna": batch.warna,
-                "viskositas_mPa_s": batch.viskositas_mPa_s,
-                "pH": batch.pH,
+                "viskositas_mpa_s": batch.viskositas_mPa_s,
+                "ph": batch.pH,
                 "kadar_ffa_percent": batch.kadar_ffa_percent,
                 "moisture_percent": batch.moisture_percent,
                 "berat_ton": batch.berat_ton,
