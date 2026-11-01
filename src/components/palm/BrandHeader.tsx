@@ -9,12 +9,12 @@ export function BrandHeader({ stats }: { stats: { total_batches: number; total_t
       <div className="flex flex-col justify-between gap-6 md:flex-row md:items-center">
         {/* Brand */}
         <div className="flex items-start gap-4">
-          <div className="overflow-hidden rounded-2xl bg-white p-1 shadow-sm">
+          <div className="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-white p-1.5 shadow-sm ring-1 ring-black/5">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.jpg" alt="PalmQual-AI" className="size-16 rounded-xl object-cover" />
+            <img src="/logo.png" alt="Sawight PalmQual-AI" className="size-full rounded-xl object-contain" />
           </div>
           <div>
-            <p className="text-[11px] font-bold tracking-[0.18em] text-[#65a30d]">PALMQUAL-AI</p>
+            <p className="text-[11px] font-bold tracking-[0.18em] text-[#65a30d]">SAWIGHT • PALMQUAL-AI</p>
             <h1 className="mt-1 max-w-md text-2xl font-extrabold leading-tight tracking-tight text-[#1c1d22] md:text-3xl">
               Quality Assessment &amp; Downstream Allocation System
             </h1>

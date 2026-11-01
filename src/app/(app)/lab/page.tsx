@@ -539,8 +539,11 @@ export default function LabPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
           <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl">
             <div className="flex items-center justify-between border-b border-gray-200 pb-4">
-              <div className="flex items-center gap-2.5">
-                <ShieldCheck className="size-6 text-[#65a30d]" />
+              <div className="flex items-center gap-3">
+                <div className="flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gray-50 p-1 ring-1 ring-black/5">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/logo.png" alt="Sawight Logo" className="size-full object-contain" />
+                </div>
                 <div>
                   <h3 className="text-base font-bold text-[#1c1d22]">
                     Certificate of Analysis (COA) — Surat Hasil Lab

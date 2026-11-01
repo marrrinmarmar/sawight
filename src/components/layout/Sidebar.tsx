@@ -51,10 +51,15 @@ export function Sidebar() {
         {/* Logo */}
         <Link
           href={currentRoleConfig.defaultPath}
-          aria-label="PalmQual-AI — kembali"
-          className="flex h-10 w-10 items-center justify-center transition-transform hover:scale-110"
+          aria-label="Sawight PalmQual-AI — beranda"
+          className="group relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl bg-white p-1 shadow-md transition-all hover:scale-105 hover:ring-2 hover:ring-[#84cc16]"
         >
-          <Atom className="size-8 text-[#84cc16]" strokeWidth={1.75} />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo.png"
+            alt="Sawight Logo"
+            className="size-full rounded-xl object-contain transition-transform group-hover:scale-105"
+          />
         </Link>
 
         {/* Navigation */}

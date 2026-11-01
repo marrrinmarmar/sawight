@@ -50,9 +50,17 @@ export function CoaStamp({
           {/* Garis Lingkaran Dalam */}
           <div className="absolute inset-1 rounded-full border border-dashed border-red-500/60" />
 
+          {/* Logo Watermark Kecil di Dalam Stempel */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo.png"
+            alt="Sawight Seal"
+            className="absolute size-9 opacity-15 mix-blend-multiply"
+          />
+
           {/* Isi Teks Cap */}
           <span className="z-10 font-mono text-[8px] font-black uppercase tracking-widest text-red-700">
-            ★ PKS SAWAIGHT LAB ★
+            ★ PKS SAWIGHT LAB ★
           </span>
 
           <div className="z-10 my-0.5 border-y border-red-600/70 py-0.5 px-2">

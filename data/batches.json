@@ -1,5 +1,57 @@
 [
   {
+    "batch_id": "LOT-20261031-1602",
+    "lokasi_kebun": "Kebun Kaltim Paser - Line 2",
+    "tanggal_panen": "2026-10-30T13:59:00.000Z",
+    "jam_masuk": "2026-10-31T09:02:00.000Z",
+    "lama_penyimpanan_jam": 19.1,
+    "warna": "Merah Jingga",
+    "viskositas_mPa_s": 48,
+    "pH": 0.9,
+    "kadar_ffa_percent": 3.89,
+    "moisture_percent": 1.75,
+    "berat_ton": 60.7,
+    "track_type": "FLEX",
+    "category": "OTHER_PRODUCTS",
+    "primary_recommendation": "Pupuk Kompos Biologis & Pembangkit Biogas Metana",
+    "alternate_recommendation": "Pembuangan Residu Terkontrol (Safe Bio-Incineration)",
+    "confidence_score": 80.6,
+    "ai_explanation": "Batch mengalami degradasi biologis berat (FFA 3.89%, pH asam 0.90, hold time 19.1 jam). Sangat efektif dialirkan ke biodigester anaerobik untuk gas metana dan kompos kaya N-P-K.",
+    "action_steps": [
+      "Alirkan substrat ke dalam CSTR Anaerobic Biodigester untuk penangkapan gas metana listrik.",
+      "Campurkan bio-slurry hasil digestasi dengan cacahan tandan kosong kelapa sawit (EFB).",
+      "Lakukan windrow composting aerobik selama 35 hari hingga matang sempurna untuk kebun."
+    ],
+    "status": "READY_WAREHOUSE",
+    "created_at": "2026-10-31T09:03:02.206Z",
+    "lab_tested_at": "2026-10-31T09:03:43.879Z",
+    "lab_analyst": "Analis Lab Utama PKS",
+    "lab_certificate_no": "COA/LAB/2026/20261031-1602",
+    "details": {
+      "tanggal_panen": "2026-10-30T13:59:00.000Z",
+      "lama_penyimpanan_jam": 19.1,
+      "warna": "Merah Jingga",
+      "viskositas_mPa_s": 48,
+      "pH": 0.9,
+      "kadar_ffa_percent": 3.89,
+      "moisture_percent": 1.75,
+      "berat_ton": 60.7,
+      "lokasi_kebun": "Kebun Kaltim Paser - Line 2",
+      "estimated_value_idr": 291360000,
+      "co2_reduction_kg": 54023,
+      "active_flow_paths": [
+        "path-1",
+        "path-2",
+        "path-3",
+        "path-flex",
+        "path-bio-no"
+      ],
+      "evaluated_at": "2026-10-31T16:03:42.735209",
+      "engine_version": "Sawight Real Report Engine v2.0 (Full Python)",
+      "engine_mode": "Python Real Report Analyzer + ML"
+    }
+  },
+  {
     "batch_id": "LOT-20261030-2308",
     "lokasi_kebun": "Kebun Riau Afdeling 1 - Blok A-08",
     "tanggal_panen": "2026-10-30T08:06:00.000Z",
@@ -22,7 +74,7 @@
       "Arahkan ke reaktor hydrodeoxygenation (HDO) katalitik suhu 320-380°C pada tekanan 60 bar.",
       "Lakukan hydroisomerization untuk menghasilkan Green Diesel berangka setana > 70."
     ],
-    "status": "READY_WAREHOUSE",
+    "status": "DISPATCHED",
     "created_at": "2026-10-30T16:08:43.439Z",
     "lab_tested_at": "2026-10-30T16:09:38.705Z",
     "lab_analyst": "Analis Lab Utama PKS",
@@ -50,7 +102,10 @@
       "evaluated_at": "2026-10-30T23:09:37.971000",
       "engine_version": "Sawight Real Report Engine v2.0 (Full Python)",
       "engine_mode": "Python Real Report Analyzer + ML"
-    }
+    },
+    "dispatched_at": "2026-10-31T09:04:52.100Z",
+    "dispatch_destination": "PT Wilmar Nabati Indonesia - Pelabuhan Dumai",
+    "dispatch_notes": "Pengiriman via Kapal Tongkang CPO-04"
   },
   {
     "batch_id": "LOT-20261030-2258",
