@@ -15,7 +15,8 @@ import {
   Check,
   ChevronRight,
   ShieldCheck,
-  UserCheck
+  UserCheck,
+  ScrollText
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useUserRole, ROLE_CONFIGS, type RoleType } from "@/lib/user-role-context";
@@ -33,6 +34,7 @@ const allNavItems: NavItem[] = [
   { href: "/gudang", icon: Warehouse, label: "Gudang (Surat & FIFO)" },
   { href: "/batches", icon: Boxes, label: "Semua Batch" },
   { href: "/settings", icon: Settings, label: "Settings" },
+  { href: "/log", icon: ScrollText, label: "Log" }
 ];
 
 export function Sidebar() {

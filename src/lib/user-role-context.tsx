@@ -25,7 +25,7 @@ export const ROLE_CONFIGS: Record<RoleType, RoleConfig> = {
     avatarText: "PQ",
     badgeColor: "bg-[#84cc16] text-[#1c1d22]",
     avatarBg: "bg-[#84cc16] text-[#1c1d22]",
-    allowedPaths: ["/", "/pengelola", "/lab", "/gudang", "/simulator", "/batches", "/settings"],
+    allowedPaths: ["/", "/pengelola", "/lab", "/gudang", "/simulator", "/batches", "/settings", "/log"],
     defaultPath: "/",
     description: "Akses menyeluruh seluruh modul sistem",
   },
