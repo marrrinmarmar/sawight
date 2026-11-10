@@ -340,7 +340,7 @@ export default function PengelolaPage() {
                     step="0.1"
                     min="1"
                     required
-                    value={form.berat_ton}
+                    // value={form.berat_ton}
                     onChange={(e) => setForm((f) => ({ ...f, berat_ton: parseFloat(e.target.value) || 0 }))}
                     className="h-11 w-full rounded-xl border border-gray-200 bg-[#f8f9f6] pl-10 pr-3.5 font-mono text-sm text-gray-800 outline-none transition-colors focus:border-[#a3e635] focus:bg-white"
                     placeholder="Contoh: 25.5"
