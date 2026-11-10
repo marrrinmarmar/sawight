@@ -38,7 +38,7 @@ export default function PengelolaPage() {
     lokasi_kebun: KEBUN_LIST[0],
     tanggal_panen: "", // Input tanggal & jam panen buah
     jam_masuk: "", // Jam masuk otomatis dari sistem perangkat
-    berat_ton: 26.5,
+    berat_ton: 0,
     lama_penyimpanan_jam: 8,
   });
 
